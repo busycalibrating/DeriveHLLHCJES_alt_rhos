@@ -1,0 +1,155 @@
+#include "xAODRootAccess/Init.h"
+#include "SampleHandler/SampleHandler.h"
+#include "SampleHandler/Sample.h"
+#include "SampleHandler/SampleMeta.h"
+#include "SampleHandler/ToolsDiscovery.h"
+#include "SampleHandler/DiskListLocal.h"
+#include "EventLoop/Job.h"
+#include "EventLoop/DirectDriver.h"
+#include "EventLoopGrid/GridDriver.h"
+#include "EventLoopGrid/PrunDriver.h"
+#include "TString.h"
+#include "DeriveHLLHCJES/xAODAnalysis.h"
+#include "DeriveHLLHCJES/MakeJets.h"
+//#include "DeriveHLLHCJES/MakeSKJets.h"
+#include "DeriveHLLHCJES/calibration2016.h"
+//#include "CreateCalibrationTreeFromxAOD/Rho.h"
+#include <sstream>
+
+
+void algorithm_chain(EL::Job & job, std::string JESconfig){
+  std::string m_configuration = "$ROOTCOREBIN/data/DeriveHLLHCJES/AntiKt4Topo_calibration2016.config";
+  std::string m_configuration_residual = "$ROOTCOREBIN/data/DeriveHLLHCJES/AntiKt4Topo_calibration2016_residual.config";
+  std::string m_configuration_unmatch = "$ROOTCOREBIN/data/DeriveHLLHCJES/AntiKt4Topo_calibration2016_unmatch.config";
+  //std::string m_MyAntiKt4SKJets = "$ROOTCOREBIN/data/DeriveHLLHCJES/AntiKt4SKJets.config";
+
+  Info("configure()", "User configuration read from : %s \n", m_configuration.c_str());
+  Info("configure()", "User configuration read from : %s \n", m_configuration_residual.c_str());
+  Info("configure()", "User configuration read from : %s \n", m_configuration_unmatch.c_str());
+
+  //MakeJets* algMakeJetsLC = new MakeJets(m_MyAntiKt4LCTopoJets);
+  //job.algsAdd(algMakeJetsLC);
+  //MakeJets* algMakeJetsEM = new MakeJets(m_MyAntiKt4EMTopoJets);
+  //job.algsAdd(algMakeJetsEM);
+      
+  //Rho* rhoEM = new Rho(m_MyAntiKt4EMTopoJets);
+  //job.algsAdd( rhoEM );
+  //Rho* rhoLC = new Rho(m_MyAntiKt4LCTopoJets);
+  //job.algsAdd( rhoLC );
+
+  //MakeSKJets* algMakeSKJets = new MakeSKJets(m_MyAntiKt4SKJets);
+  //job.algsAdd(algMakeSKJets);
+  calibration2016* alg = new calibration2016(m_configuration,JESconfig);    
+  job.algsAdd( alg );
+  calibration2016* alg_residual = new calibration2016(m_configuration_residual,JESconfig);    
+  job.algsAdd( alg_residual );
+  calibration2016* alg_unmatch = new calibration2016(m_configuration_unmatch,JESconfig);    
+  job.algsAdd( alg_unmatch );
+}
+
+int main( int argc, char* argv[] ) {
+  std::string m_configuration = "$ROOTCOREBIN/data/DeriveHLLHCJES/AntiKt4Topo_calibration2016.config";
+  //THESE ARE USED FOR MAKING YOUR OWN JETS std::string m_MyAntiKt4LCTopoJets = "$ROOTCOREBIN/data/DeriveHLLHCJES/MyAntiKt4LCTopoJets.config";
+  //std::string m_MyAntiKt4EMTopoJets = "$ROOTCOREBIN/data/DeriveHLLHCJES/MyAntiKt4EMTopoJets.config";
+
+  std::string m_configName = gSystem->ExpandPathName( m_configuration.c_str() );
+  TEnv* settings = new TEnv(m_configName.c_str());
+
+  std::string input = settings->GetValue("Input","/afs/cern.ch/user/g/gmarceca/WORK/sample");
+  //std::string input = settings->GetValue("Input","/afs/cern.ch/work/j/jroloff/skDataSamples/mu200Samples");
+  std::string submitDir = settings->GetValue("Output","submitDir");
+  std::string directory; //Sample directory
+  std::string USER_output_path; //Sample directory
+  std::string grid; //Sample directory
+  std::string gridinput; //File containing list of inputs
+  std::string JESconfig( "JES_MC15Prerecommendation_April2015.config" );
+
+  SH::SampleHandler sh;  
+  for (int i=1; i< argc; i++){
+    std::string opt(argv[i]); std::vector< std::string > v;
+    std::istringstream iss(opt);
+    std::string item;
+    char delim = '=';
+    while (std::getline(iss, item, delim)){
+      v.push_back(item);
+    }
+
+    // Take the submit directory from the input:
+    if ( opt.find("--submitDir=")   != std::string::npos) submitDir = v[1];
+    if ( opt.find("--sample=")   != std::string::npos) directory = v[1];
+    if ( opt.find("--output=")   != std::string::npos) USER_output_path = v[1];
+    if ( opt.find("--grid=")   != std::string::npos) grid = v[1];
+    if ( opt.find("--inputFileList=")   != std::string::npos) gridinput = v[1];
+    if ( opt.find("--JESconfig=")   != std::string::npos) JESconfig = v[1];
+
+  }
+  std::cout<<"USER_output_path: "<<USER_output_path<<std::endl;
+  std::cout<<"submitDir: "<<submitDir<<std::endl;
+  std::cout<<"directory: "<<directory<<std::endl;
+  std::cout<<"grid: "<<grid<<std::endl;
+  std::cout<<"input: "<<input<<std::endl;
+  
+  if (TString(grid).Contains("true")) {    
+    const char* inputFileList = gSystem->ExpandPathName(settings->GetValue("inputFileList", ""));
+    if (!gridinput.empty()) inputFileList = gridinput.c_str();
+      
+    if(std::string(inputFileList) == ""){
+      std::cout << "ERROR occurred. No inputFileList defined. This is needed for the grid run!" << endl;
+      return 1;
+    }
+    std::cout << "Looking for files in inputFileList..." << std::endl;
+    ifstream f;	string s;
+    f.open(	inputFileList, ios::in);
+    while (!f.eof())
+      {
+	getline(f, s);
+	if(s == "") continue;
+	SH::scanDQ2 (sh, s);
+      }
+    f.close();
+    /////
+
+    sh.setMetaString( "nc_tree", "CollectionTree" );
+    xAOD::Init().ignore();
+    EL::Job job;
+    job.sampleHandler(sh);
+    algorithm_chain(job,JESconfig);
+    
+    // To automatically delete submitDir
+    job.options()->setDouble(EL::Job::optRemoveSubmitDir, 1);
+    EL::PrunDriver driver;
+    if (!USER_output_path.data()) Error("xAODrun", "Set USER_output_path!");
+      
+    //normal
+    driver.options()->setString("nc_outputSampleName",  (const char*) (TString(USER_output_path)+".%in:name[2]%.%in:name[6]%"));
+    //for sven's production
+    //driver.options()->setString("nc_outputSampleName",  (const char*) (TString(USER_output_path)+".%in:name[3]%.%in:name[7]%"));
+
+    // driver.options()->setDouble("nc_disableAutoRetry", 1); //Disabling AutoRetry
+    //driver.options()->setDouble("nc_nFilesPerJob", 1);
+    //driver.options()->setString("nc_rootVer", "5.34.22");
+    driver.options()->setString("nc_cmtConfig", "x86_64-slc6-gcc49-opt");
+    driver.submit( job, submitDir );      
+  } else {
+      
+      
+    SH::scanDir( sh, input);
+    sh.setMetaString( "nc_tree", "CollectionTree" );
+    xAOD::Init().ignore();
+    EL::Job job;
+    job.sampleHandler(sh);
+    algorithm_chain(job,JESconfig);
+
+      
+        // To automatically delete submitDir
+        job.options()->setDouble(EL::Job::optRemoveSubmitDir, 1);
+
+
+        EL::DirectDriver driver;
+
+        driver.submit( job, submitDir );
+
+    }
+
+    return 0;
+}

@@ -1,0 +1,1 @@
+/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase/x86_64/rcSetup/00-04-17/rcSetup.sh

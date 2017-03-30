@@ -1,0 +1,13 @@
+# this makefile also gets parsed by shell scripts
+# therefore it does not support full make syntax and features
+# edit with care
+
+PACKAGE          = JES_ResponseFitter
+PACKAGE_PRELOAD  = 
+PACKAGE_CXXFLAGS = 
+PACKAGE_LDFLAGS  = $(shell root-config --libs)
+PACKAGE_BINFLAGS = 
+PACKAGE_DEP      =
+PACKAGE_NOOPT    = 0
+
+include $(ROOTCOREDIR)/Makefile-common

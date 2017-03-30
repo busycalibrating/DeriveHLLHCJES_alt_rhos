@@ -1,0 +1,59 @@
+#Test HLLHC config
+#####################
+
+
+
+# ----------------
+# 1. Absolute JES
+
+  # The file with the absolute JES factors
+AbsoluteJES.CalibFile:	       JES.config
+AbsoluteJES.Description:       JES derived May 2015 with Jet Areas, for application to MC15
+
+  # How low in ET do we extrapolate along the calibration curve ?
+AntiKt4EMTopo.MinPtForETAJES:  18
+AntiKt4LCTopo.MinPtForETAJES:  18
+
+
+  # Which method should be used to extend the calibration curve past the minimum ET ?
+  # 0 = calibation curve is frozen at minimum ET
+  # 1 = slope of calibration curve is frozen at minimum ET (recommended)
+  # 2 = order 2 polynomial is used to extend the calibration curve
+LowPtJESExtrapolationMethod:   0
+LowPtJESExtrapolationMinimumResponse: 0.25
+
+AntiKt4EMTopo.UseSecondaryMinPtForETAJES: false
+AntiKt4LCTopo.UseSecondaryMinPtForETAJES: false
+
+AntiKt4EMTopo.FreezeJEScorrectionatHighE: true
+AntiKt4LCTopo.FreezeJEScorrectionatHighE: true
+
+# ----------------
+# 2. Pile-up correction
+
+  # What offset correction to apply
+#unused OffsetCorrection.Name:          OffsetMC12Nov2012
+
+  # What residual jet-area offset correction to apply
+#ResidualOffsetCorrection.Name:   ResidualOffset
+ResidualOffsetCorrection.Name:   UPGRIDINV12r7486
+
+  # These corrections should correspond to the
+  # conditions of the absolute JES calibration
+#OffsetCorrection.DefaultMuRef:   20
+#OffsetCorrection.DefaultNPVRef:  78
+
+OffsetCorrection.DefaultMuRef:   200
+OffsetCorrection.DefaultNPVRef:  58
+
+  # additional config files to include
+ResidualOffset.CalibFile: Residual.config
+
+  # mu-scale factor used (only for MC)
+MuScaleFactor: 	      1.00
+
+  # should the beam-spot correction be applied (only for MC)
+ApplyNPVBeamspotCorrection:	0
+
+  # Set this to 1 to apply full 4-vector area correction
+ApplyFullJetArea4MomentumCorrection:     0

@@ -1,0 +1,272 @@
+
+#include "JES_ResponseFitter/JES_BalanceFitter.h"
+
+//-----------------------------------------------------------------------//
+// Constructor 
+//-----------------------------------------------------------------------//
+JES_BalanceFitter::JES_BalanceFitter(double Nsigma) :
+  m_Nsigma(Nsigma), m_minPt(0), m_fit(0), m_histo(0), m_fitHisto(0),
+  m_param("gaus"), m_fitOpt("RQ0"), m_fitCol(kRed), m_lNlines(0), 
+  m_rNlines(0), m_min0(0.2), m_max0(2.0), 
+  m_xLeft(0.15), m_xRight(0.60), m_yTop(0.8), m_dy(0.05) // Adjust location of statbox here
+{
+  SetGaus(); 
+}
+
+
+//-----------------------------------------------------------------------//
+// Various fitting functions
+//-----------------------------------------------------------------------//
+TF1 *JES_BalanceFitter::Fit(TH1 *histo, double fitMin) {
+  m_histo=histo; 
+  m_fitHisto = histo = (TH1*)histo->Clone();
+  m_fitHisto->SetMarkerColor(1);
+  m_fitHisto->SetMarkerSize(2);
+  int rebin = OptimalRebin(histo);
+  m_fitHisto->Rebin(rebin);
+  TF1 *f = OnlyFit(m_fitHisto,fitMin);
+  return f;
+}
+//-----------------------------------------------------------------------//
+TF1 *JES_BalanceFitter::FitNoRebin(TH1 *histo, double fitMin) {
+  m_histo=histo; m_fitHisto=histo; return OnlyFit(m_histo,fitMin);
+}
+//-----------------------------------------------------------------------//
+TF1 *JES_BalanceFitter::OnlyFit(TH1 *histo, double fitMin) {
+  // inital range
+  double minx = fitMin > m_min0 ? fitMin : m_min0;
+  static int fiti=0;
+  m_fit = new TF1(Form("fit%d",++fiti), m_param, minx, m_max0); 
+  //std::cout << minx << " " << m_max0 << std::endl;
+  m_fit->SetLineWidth(2);
+  m_fit->SetParameters(histo->GetMaximum(),histo->GetMean(),histo->GetRMS());
+  //m_fit->SetParLimits(2,0.,1.0); 
+  m_fit->SetLineColor(m_fitCol);
+  // "Hack" to make the fits converge
+  histo->Fit(m_fit,"RLQ0");
+  SetFitRange(fitMin); histo->Fit(m_fit,m_fitOpt);
+  SetFitRange(fitMin); histo->Fit(m_fit,m_fitOpt);
+  return m_fit;
+}
+
+//-----------------------------------------------------------------------//
+// Functions to control the fit
+//-----------------------------------------------------------------------//
+void JES_BalanceFitter::SetFitRange(double fitMin) {
+  double mean = GetMean(), sigma = GetSigma();
+  double minx = mean - m_Nsigma*sigma, maxx = mean + m_Nsigma*sigma;
+  if (minx<fitMin) minx=fitMin;
+  m_fit->SetRange(minx,maxx);
+}
+
+//-----------------------------------------------------------------------//
+// Functions to retrieve fit variables
+//-----------------------------------------------------------------------//
+TF1* JES_BalanceFitter::GetFit() {
+  if (m_fit==NULL) error("Somethign went wrong. Can't access fit function!");
+  return m_fit;
+}
+//-----------------------------------------------------------------------//
+TH1* JES_BalanceFitter::GetHisto() {
+  if (m_fitHisto==NULL) error("Somethign went wrong. Can't access fitted histogram!");
+  return m_fitHisto;
+}
+//-----------------------------------------------------------------------//
+TH1* JES_BalanceFitter::GetFineHisto() {
+  if (m_histo==NULL) error("Somethign went wrong. Can't access fitted histogram!");
+  return m_histo;
+}
+//-----------------------------------------------------------------------//
+double JES_BalanceFitter::GetMean() {
+  return GetFit()->GetParameter(1);
+}
+//-----------------------------------------------------------------------//
+double JES_BalanceFitter::GetMeanError() {
+  return GetFit()->GetParError(1);
+}
+//-----------------------------------------------------------------------//
+double JES_BalanceFitter::GetSigma() {
+  return GetFit()->GetParameter(2);
+}
+//-----------------------------------------------------------------------//
+double JES_BalanceFitter::GetSigmaError() {
+  return GetFit()->GetParError(2);
+}
+//-----------------------------------------------------------------------//
+double JES_BalanceFitter::GetPeak() {
+  return GetFit()->GetMaximumX(0,2);
+}
+//-----------------------------------------------------------------------//
+double JES_BalanceFitter::GetMedian() {
+  return GetQuantile(0.5);
+}
+//-----------------------------------------------------------------------//
+double JES_BalanceFitter::GetQuantile(double frac) {
+  if (frac<=0||frac>=1) error(Form("Can't access quantile for fraction %.1f",frac));
+  double min=GetMean()-5.0*GetSigma(), max=GetMean()+5.0*GetSigma();
+  if (m_param.Contains("Pois")&&min<0) min=0; 
+  int Nsteps=10000;
+  TF1 *fit = GetFit(); double Atot=fit->Integral(min,max), A=0, dx=(max-min)/Nsteps;
+  for (int i=0;i<Nsteps;++i) {
+    double xi=min+i*dx;
+    A+=fit->Eval(xi)*dx; // f(x)*dx
+    if (A>Atot*frac) return xi-0.5*dx;
+  }
+  error("GetQuantile failed!");
+  return 0;
+}
+//-----------------------------------------------------------------------//
+// Bogdan's implementation based on Root functions, with log(#bins) complexity
+
+double JES_BalanceFitter::GetHistoQuantile(double frac, Int_t verbose) {
+   if (frac<=0||frac>=1) error(Form("Can't access histo quantile for fraction %.1f",frac));
+   TH1D *h = (TH1D*) GetFineHisto();
+   TH1D *h2 = new TH1D(*h); // copy where changes in the bin contents will be implemented
+   Double_t entries = h2->GetEntries();
+
+   // include underflow and overflow bin contents in the computation of the quantiles ("GetQuantiles" function in root ignores underflow and overflow bin contents)
+   Int_t Nbins = h2->GetNbinsX();
+   h2->SetBinContent( 1, h2->GetBinContent(0)+h2->GetBinContent(1) );
+   h2->SetBinContent( Nbins, h2->GetBinContent(Nbins)+h2->GetBinContent(Nbins+1) );
+   h2->ComputeIntegral();
+
+   Double_t integral = h2->GetSumOfWeights();
+   if( verbose ){ std::cout << std::endl << "Computing quantiles..." << std::endl << "integral = " << integral << "  entries = " << entries << "  underflow = " << h2->GetBinContent(0) << "  overflow =" << h2->GetBinContent(Nbins+1) << std::endl; }
+
+   Int_t nq = 1;
+   Double_t xq[nq];  // position where to compute the quantiles in [0,1]
+   Double_t yq[nq];  // array to contain the quantiles
+   xq[0] = frac;
+
+   if( h2->GetBinContent(0)/integral > xq[0] ){ error("quantile will be biassed (underflow). Consider extending the range of the histogram towards lower values."); }
+   if( h2->GetBinContent(Nbins+1)/integral > (1. - xq[0]) ){ error("quantile will be biassed (overflow). Consider extending the range of the histogram towards larger values."); }
+
+   h2->GetQuantiles(nq,yq,xq);
+
+   if( verbose ){ std::cout << "Requested quantile: " << xq[0] << ";  Result: " << yq[0]  << std::endl; }
+   delete h2;
+
+   return yq[0];
+}
+
+/*
+double JES_BalanceFitter::GetHistoQuantile(double frac) {
+  if (frac<=0||frac>=1) error(Form("Can't access histo quantile for fraction %.1f",frac));
+  TH1 *h = GetFineHisto();
+  int N=h->GetNbinsX();
+  double sum=0, tot=h->Integral(0,N+1);
+  for (int bin=0;bin<=N+1;++bin) {
+    sum+=h->GetBinContent(bin);
+    if (sum/tot>frac) return h->GetBinLowEdge(bin+1)-h->GetBinWidth(bin+1)/2;
+  }
+  error("GetHistoQuantile failed!");
+  return 0;
+}
+*/
+//-----------------------------------------------------------------------//
+double JES_BalanceFitter::GetChi2() {
+  return GetFit()->GetChisquare();
+}
+//-----------------------------------------------------------------------//
+double JES_BalanceFitter::GetNdof() {
+  return GetFit()->GetNDF();
+}
+//-----------------------------------------------------------------------//
+double JES_BalanceFitter::GetChi2Ndof() {
+  return GetChi2()/GetNdof();
+}
+
+
+
+
+
+//-----------------------------------------------------------------------//
+// Functions to draw and print fit info
+//-----------------------------------------------------------------------//
+void JES_BalanceFitter::DrawFitAndHisto() {
+  GetHisto()->GetXaxis()->SetRangeUser(-1,2);
+  GetHisto()->SetMarkerColor(1);
+  GetHisto()->SetMarkerSize(0.2);
+  GetHisto()->SetMarkerStyle(20);
+  GetHisto()->SetLineColor(1);
+  GetHisto()->Draw("E"); 
+  GetFit()->Draw("same");
+
+  //DrawExtendedFit(0,2);
+  ResetTextCounters();
+  PrintFitInfo();
+}
+//-----------------------------------------------------------------------//
+void JES_BalanceFitter::PrintFitInfo() {
+  DrawTextRight(m_fitDesc,m_fitCol);
+  DrawTextRight(Form("#it{#chi}^{2}/#it{n}_{dof}: %.2f",
+		     GetChi2Ndof()),m_fitCol);
+  DrawTextRight(Form("mean: (%.2f#pm%.2f)%%",
+		     (GetMean()-1.0)*100,
+		     GetMeanError()*100),m_fitCol);
+  DrawTextRight(Form("width: (%.2f#pm%.2f)%%",
+		     GetSigma()*100,
+		     GetSigmaError()*100),m_fitCol);
+}
+//-----------------------------------------------------------------------//
+void JES_BalanceFitter::DrawExtendedFit(double minx, double maxx) {
+  TF1 *fit = (TF1*)GetFit()->Clone();
+  fit->SetRange(minx,maxx);
+  fit->SetLineStyle(2); fit->Draw("same");
+  GetFit()->Draw("same");
+}
+//-----------------------------------------------------------------------//
+void JES_BalanceFitter::DrawTextLeft(Str txt, int col) {
+  DrawText(m_xLeft,m_yTop-m_dy*(m_lNlines++),txt,col);
+}
+//-----------------------------------------------------------------------//
+void JES_BalanceFitter::DrawTextRight(Str txt, int col) {
+  DrawText(m_xRight,m_yTop-m_dy*(m_rNlines++),txt,col);
+}
+//-----------------------------------------------------------------------//
+void JES_BalanceFitter::DrawText(double x, double y, Str txt, int col) {
+  static TLatex *tex = new TLatex(); tex->SetNDC(); tex->SetTextFont(42);
+  tex->SetTextSize(0.04);
+  tex->SetTextColor(col); tex->DrawLatex(x,y,txt);
+}
+
+//-----------------------------------------------------------------------//
+// Functions to rebin
+//-----------------------------------------------------------------------//
+int JES_BalanceFitter::OptimalRebin(TH1 *h)
+{
+  int method=1;
+
+  // Get optimal bin withs using Scott's Choise
+  double N=h->GetEffectiveEntries();
+  //Neff(h);
+  //double optWidth = _optBinParam*h->GetRMS()/pow(N,1.0/3);
+  double optWidth = 3.5*h->GetRMS()/TMath::Power(N,1.0/3);
+  int Nbins=h->GetNbinsX();
+  double range=h->GetBinLowEdge(Nbins+1)-h->GetBinLowEdge(1);
+  int rebin=1;
+  double prevWidth=range/Nbins;
+  for (int i=1;i<Nbins;++i) {
+    if (Nbins%i!=0) continue;
+    double binWidth=range/Nbins*i;
+    //if (binWidth>maxWidth) continue;
+  
+    if (method==1) {
+      // optimistic
+      if (binWidth<optWidth) rebin=i;
+    } else if (method==2) {
+      if (TMath::Abs(binWidth-optWidth) < 
+          TMath::Abs(prevWidth-optWidth)) rebin=i;
+    }
+    else rebin=i; // method 3
+
+    if (binWidth>optWidth) break;
+    prevWidth=binWidth;
+  }
+  bool _vebose=false;
+  if (_vebose) {
+    printf("\n%s\n  RMS: %.3f, Neff: %.3f\n",h->GetName(),h->GetRMS(),N);
+    printf("  Opt width: %6.3f, histo binwidth: %6.3f => Rebin: %d\n",optWidth,range/Nbins,rebin);
+  }
+  return rebin;
+}

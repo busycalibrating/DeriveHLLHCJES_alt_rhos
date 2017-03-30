@@ -1,0 +1,96 @@
+# Dear emacs, treat this as: -*- sh -*-
+######
+#
+#  Numerical Inversion Configuration File for:
+#
+#    Anti-Kt R=4 topo jets at LC scale, weights applied
+#
+
+Grid: False
+
+DoTowers: 0
+DoGridTowers: 0
+
+DoPUCut: 0
+MatchingCut: 	       0.3
+RecoIsolationDR:       0.6
+RecoIsolationPtCut:    7
+TruthIsolationDR:      0.8
+TruthIsolationPtCut:   7
+
+MinPtRatioCut: 0.0
+MaxPtRatioCut: 1.4
+
+WeightFlag: True
+
+ApplyJES:   False
+
+
+  # The reco jet branche names (in the D3PD)
+JetAlgos:	       	AntiKt4LCTopoJets AntiKt4EMTopoJets AntiKt4EMPFlowJets 
+EventShapes:            Kt4LCTopoEventShape Kt4EMTopoEventShape Kt4EMPFlowEventShape
+
+  # Truth jet branch names - must match the above ones!
+TruthJetAlgos:         	AntiKt4TruthJets AntiKt4TruthJets AntiKt4TruthJets
+Input:			/afs/cern.ch/work/a/alkire/private/samples/mc15_2016
+Output:			mc15_2016_0
+inputFileList:          mc15_2016.txt
+
+iso_corr1: 0
+iso_true: 0
+pv_cut: 0
+pt_orig1: 1
+E_orig1: 1
+m_orig1: 1
+eta_orig1: 1
+phi_orig1: 1
+pt_corr1: 0
+E_corr1: 0
+m_corr1: 0
+eta_corr1: 0
+phi_corr1: 0
+
+#SA change these back!!
+
+pt_corr2: 0
+E_corr2: 0
+m_corr2: 0
+eta_corr2: 0
+phi_corr2: 0
+
+pt_tower: 0
+E_tower: 0
+m_tower: 0
+eta_tower: 0
+phi_tower: 0
+
+pt_tgrid: 0
+E_tgrid: 0
+m_tgrid: 0
+eta_tgrid: 0
+phi_tgrid: 0
+
+pt_calo: 1
+E_calo: 1
+m_calo: 1
+eta_calo: 1
+phi_calo: 1
+
+tower_rho: 0
+tgrid_rho: 0
+
+pt_true: 1
+E_true: 1
+m_true: 1
+eta_true: 1
+phi_true: 1
+area: 1
+index: 1
+mu: 1
+NPV: 1
+
+RHO: 1
+RHOGRID: 0
+RHOTGRID: 0
+
+

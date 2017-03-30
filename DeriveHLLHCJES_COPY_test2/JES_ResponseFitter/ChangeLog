@@ -1,0 +1,15 @@
+# vim: set noexpandtab:
+
+2012-10-26 Matt Relich
+	* Converting to RootCore package
+
+2012-11-06 Dag Gillberg, tag: 00-01-01
+	* Added binaries for example code that work in RootCore
+
+2012-11-15 Bogdan Malaescu
+	* Added quantile computation with log(#bins) complexity
+
+2012-11-20 Dag Gillberg, tag: 00-02-00
+	* Now use qhi2 fit (due to problems with weighted likelihood)
+	* First tag intended for use in in-situ analyses
+

@@ -1,0 +1,134 @@
+#Steve Alkire
+#ranges are based on mc15a PU --need to be adjusted up a little for 2016
+
+Tag: RHOSTRIP_1R
+
+OutputFile: npvResidual.root
+EventTree: EventTree
+NTest: 0
+#Cut: IF YOU WANT A CUT
+LocalConfig: Local.config
+MainConfig: Main.config
+
+Fit: [0]+[1]*x
+FitLow: 6.5
+FitHigh: 27.5
+
+Average: [0]
+AverageLow: 10.5
+AverageHigh: 36.5
+
+
+#list of trees to add to EventTree
+
+NTree: 0
+
+#Tree0: jM
+#Tree1: aM
+#Tree2: TM
+
+#SubTerm0File: singlemuMuArea.root
+SubTerm0Hist: area_0_0_clone_zx0_mean_myfit_par1_myfit_par0_myfit_par0
+SubTerm0Fit: area_0_0_clone_zx0_mean_myfit_par1_myfit_par0_myfit_par0_myfit
+SubTerm0Var: (RHOSTRIP_1R*area)
+
+#SubTerm1File:
+#SubTerm1Hist: 
+#SubTerm1Fit:
+
+#histogram parameters top down. if you include HParBin0 it defaults to binarray
+NHPar: 2
+
+HPar0: pt_calo - pt_true
+HPar0NBin: 200
+HPar0Low: -400.
+HPar0High: 400.
+#HPar0Bin0:
+
+HPar1: mu
+HPar1NBin: 26
+HPar1Low: 10.5
+HPar1High: 36.5
+HPar1Fac: 1.0
+
+HPar2: NPV
+HPar2NBin: 21
+HPar2Low: 6.5
+HPar2High: 27.5
+HPar2Fac: 1.0
+
+
+
+#iterative parameters --handles 2
+NIPar: 2
+
+IPar0: pt_true
+IPar0NBin: 5
+IPar0Bin0: 20.0
+IPar0Bin1: 30.0
+IPar0Bin2: 40.0
+IPar0Bin3: 80.0
+IPar0Bin4: 120.0
+IPar0Bin5: 200.0
+
+#IPar0NBin: 8
+#IPar0Bin0: 20.0
+#IPar0Bin1: 30.0
+#IPar0Bin2: 40.0
+#IPar0Bin3: 50.0
+#IPar0Bin4: 60.0
+#IPar0Bin5: 80.0
+#IPar0Bin6: 100.0
+#IPar0Bin7: 140.0
+#IPar0Bin8: 200.0
+
+IPar0Fit: [0]+[1]*log(x/25.0)
+IPar0FitLow: 20
+IPar0FitHigh: 200
+
+IPar1: abs(eta_true)
+#IPar1NBin: 1
+IPar1NBin: 41
+IPar1Bin0: 0.0
+IPar1Bin1: 0.1
+IPar1Bin2: 0.2
+IPar1Bin3: 0.3
+IPar1Bin4: 0.4
+IPar1Bin5: 0.5
+IPar1Bin6: 0.6
+IPar1Bin7: 0.7
+IPar1Bin8: 0.8
+IPar1Bin9: 0.9
+IPar1Bin10: 1.0
+IPar1Bin11: 1.1
+IPar1Bin12: 1.2
+IPar1Bin13: 1.3
+IPar1Bin14: 1.4
+IPar1Bin15: 1.5
+IPar1Bin16: 1.6
+IPar1Bin17: 1.7
+IPar1Bin18: 1.8
+IPar1Bin19: 1.9
+IPar1Bin20: 2.0
+IPar1Bin21: 2.1
+IPar1Bin22: 2.2
+IPar1Bin23: 2.3
+IPar1Bin24: 2.4
+IPar1Bin25: 2.5
+IPar1Bin26: 2.6
+IPar1Bin27: 2.7
+IPar1Bin28: 2.8
+IPar1Bin29: 2.9
+IPar1Bin30: 3.0
+IPar1Bin31: 3.1
+IPar1Bin32: 3.2
+IPar1Bin33: 3.3
+IPar1Bin34: 3.4
+IPar1Bin35: 3.5
+IPar1Bin36: 3.6
+IPar1Bin37: 3.8
+IPar1Bin38: 4.0
+IPar1Bin39: 4.2
+IPar1Bin40: 4.5
+IPar1Bin41: 4.9
+

@@ -1,0 +1,264 @@
+#include <EventLoop/Job.h>
+#include <EventLoop/StatusCode.h>
+#include <EventLoop/Worker.h>
+#include <DeriveHLLHCJES/MakeSKJets.h>
+
+
+#include "AsgTools/AsgTool.h"
+
+#include "JetRec/PseudoJetGetter.h"
+#include "JetRec/JetFromPseudojet.h"
+#include "JetRec/JetFinder.h"
+#include "JetRec/JetSplitter.h"
+#include "JetRec/JetRecTool.h"
+#include "JetRec/JetDumper.h"
+#include "JetRec/JetToolRunner.h"
+#include "JetRecTools/SoftKillerWeightTool.h"
+#include "JetRecTools/VoronoiWeightTool.h"
+#include "JetRecTools/JetConstituentModSequence.h"
+
+
+#include "JetInterface/IJetModifier.h"
+#include "JetInterface/IJetConstituentModifier.h"
+#include "JetInterface/IJetExecuteTool.h"
+#include "xAODRootAccess/tools/Message.h"
+
+#include <iostream>
+#include "TSystem.h"
+#include "TEnv.h"
+
+#define EL_RETURN_CHECK( CONTEXT, EXP )         \
+  do {                                          \
+  if( ! EXP.isSuccess() ) {                     \
+  Error( CONTEXT,                               \
+    XAOD_MESSAGE( "Failed to execute: %s" ),    \
+         #EXP );                                \
+  return EL::StatusCode::FAILURE;               \
+  }                                             \
+  } while( false )
+
+using namespace std;
+using asg::ToolStore;
+
+// this is needed to distribute the algorithm to the workers
+ClassImp(MakeSKJets)
+
+
+
+MakeSKJets :: MakeSKJets ()
+{
+}
+
+MakeSKJets :: MakeSKJets (string config)
+{
+  m_config = config;
+}
+
+
+
+EL::StatusCode MakeSKJets :: setupJob (EL::Job& job)
+{
+  job.useXAOD ();
+  xAOD::Init( "MakeSKJets" ).ignore(); // call before opening first file
+  return EL::StatusCode::SUCCESS;
+}
+
+
+
+EL::StatusCode MakeSKJets :: histInitialize ()
+{
+  return EL::StatusCode::SUCCESS;
+}
+
+
+
+EL::StatusCode MakeSKJets :: fileExecute ()
+{
+  return EL::StatusCode::SUCCESS;
+}
+
+
+
+EL::StatusCode MakeSKJets :: changeInput (bool firstFile)
+{
+  return EL::StatusCode::SUCCESS;
+}
+
+
+
+EL::StatusCode MakeSKJets :: initialize ()
+{
+
+  Info("configure()", "Jet configuration read from : %s \n", m_config.c_str());
+  m_config = gSystem->ExpandPathName( m_config.c_str() );
+  TEnv* m_settings = new TEnv(m_config.c_str());
+  if( !m_settings ) {
+    Error("xAODAnalysis::initiaize()", "Failed to read config file!");
+    Error("xAODAnalysis::initiaize()", "config name : %s",m_config.c_str());
+  }
+
+  SkipNegativeEnergy = true;
+  Label = m_settings->GetValue("Label","LCTopo");
+  JetRadius = m_settings->GetValue("JetRadius",0.4);
+  JetAlgorithm = m_settings->GetValue("JetAlgo","AntiKt");
+  PtMin = m_settings->GetValue("PtMin", 0.001);
+  InputClusters = m_settings->GetValue("InputClusters","CaloCalTopoClusters");
+  InputType = m_settings->GetValue("InputType","CaloCluster");
+  InputLabel = m_settings->GetValue("InputLabel","LCTopo");
+  ClusterOutputContainer = m_settings->GetValue("ClusterOutputContainer","SKClusters");
+  OutputContainer = m_settings->GetValue("OutputContainer","AntiKt4SKJets");
+  m_PseudoJetGetter = m_settings->GetValue("PseudoJetGetter","lcget");
+	SKGridSize = m_settings->GetValue("SoftKillerGridSize", 0.6);
+	SKRapMax = m_settings->GetValue("SKRapMax", 2.5);
+	SKRapMaxApplied = m_settings->GetValue("SKRapMaxApplied", 10);
+  
+
+  m_event = wk()->xaodEvent();
+  m_store = wk()->xaodStore();
+
+  VoronoiWeightTool* vorWeights = new VoronoiWeightTool("VorWeights");
+  EL_RETURN_CHECK("initialize()", vorWeights->setProperty("doSpread", false) );
+  EL_RETURN_CHECK("initialize()", vorWeights->setProperty("nSigma", 0) );
+  EL_RETURN_CHECK("initialize()", vorWeights->initialize() );
+  ToolHandle<IJetConstituentModifier> ivorWeights(vorWeights);
+  hclusts.push_back(ivorWeights);
+
+
+  SoftKillerWeightTool* skWeights = new SoftKillerWeightTool("SKWeights");
+  EL_RETURN_CHECK("initialize()", skWeights->setProperty("SKGridSize", SKGridSize) );
+  EL_RETURN_CHECK("initialize()", skWeights->setProperty("SKRapMax", SKRapMax) );
+  //EL_RETURN_CHECK("initialize()", skWeights->setProperty("SKRapMaxApplied", SKRapMaxApplied) );
+  EL_RETURN_CHECK("initialize()", skWeights->initialize() );
+  ToolHandle<IJetConstituentModifier> iskWeights(skWeights);
+  hclusts.push_back(iskWeights);
+
+
+	skClustModSeq = new JetConstituentModSequence( "ClustModifSequence");
+  EL_RETURN_CHECK("initialize()", skClustModSeq->setProperty("InputContainer", (const char *) InputClusters) );
+  EL_RETURN_CHECK("initialize()", skClustModSeq->setProperty("OutputContainer", (const char *) ClusterOutputContainer) );
+  EL_RETURN_CHECK("initialize()", skClustModSeq->setProperty("InputType", (const char *) InputType) );
+  EL_RETURN_CHECK("initialize()", skClustModSeq->setProperty("Modifiers", hclusts ) );
+  EL_RETURN_CHECK("initialize()", skClustModSeq->initialize());
+  ToolHandle<IJetExecuteTool> iclustModTool(skClustModSeq);
+
+
+  
+  PseudoJetGetter* plcget = new PseudoJetGetter("m_pjgetter");
+  EL_RETURN_CHECK("initialize()", plcget->setProperty("InputContainer", (const char *) ClusterOutputContainer) );
+  EL_RETURN_CHECK("initialize()", plcget->setProperty("OutputContainer", "PJGetter" ) );
+  EL_RETURN_CHECK("initialize()", plcget->setProperty("Label", (const char *) InputLabel) );
+  EL_RETURN_CHECK("initialize()", plcget->setProperty("SkipNegativeEnergy", true) );
+  EL_RETURN_CHECK("initialize()", plcget->setProperty("GhostScale", 0.0) );
+  EL_RETURN_CHECK("initialize()", plcget->initialize() );
+  ToolHandle<IPseudoJetGetter> hlcget(plcget);
+  hgets.push_back(hlcget);
+
+  //check jetrec.cxx for jvt and many more attributes to be added
+  cout << "Creating jet builder." << endl;
+  JetFromPseudojet* pbuild = new JetFromPseudojet("jetbuild");
+  ToolHandle<IJetFromPseudojet> hbuild(pbuild);
+  vector<string> jetbuildatts;
+  jetbuildatts.push_back("ActiveArea");
+  jetbuildatts.push_back("ActiveAreaFourVector");
+  EL_RETURN_CHECK("initialize()", pbuild->setProperty("Attributes", jetbuildatts) );
+  EL_RETURN_CHECK("initialize()", pbuild->initialize() );
+  
+  cout << "Creating jet finder." << endl;
+  JetFinder* pfind = new JetFinder("jetfind");
+  EL_RETURN_CHECK("initialize()", pfind->setProperty("JetAlgorithm", (const char *) JetAlgorithm) );
+  EL_RETURN_CHECK("initialize()", pfind->setProperty("JetRadius", JetRadius));
+  EL_RETURN_CHECK("initialize()", pfind->setProperty("PtMin", PtMin));
+  EL_RETURN_CHECK("initialize()", pfind->setProperty("GhostArea", 0.01));
+  EL_RETURN_CHECK("initialize()", pfind->setProperty("RandomOption", 1));
+  EL_RETURN_CHECK("initialize()", pfind->setProperty("JetBuilder", hbuild));
+  //EL_RETURN_CHECK("initialize()", );
+  ToolHandle<IJetFinder> hfind(pfind);
+  //ToolStore::put(pfind);
+  EL_RETURN_CHECK("initialize()",pfind->initialize() );
+  cout << "Creating jetrec tool." << endl;
+  JetRecTool* pjrf = new JetRecTool("jrfind");
+  EL_RETURN_CHECK("initialize()", pjrf->setProperty("OutputContainer", (const char *) OutputContainer));
+  EL_RETURN_CHECK("initialize()", pjrf->setProperty("PseudoJetGetters", hgets));
+  EL_RETURN_CHECK("initialize()", pjrf->setProperty("JetFinder", hfind));
+  //EL_RETURN_CHECK("initialize()", pjrf->setProperty("JetModifiers", mods));
+  EL_RETURN_CHECK("initialize()", pjrf->initialize());
+  ToolHandle<IJetExecuteTool> hjrf(pjrf);
+  hrecs.push_back(pjrf);
+  vector<string> fvmoms;
+  fvmoms.push_back("jetP4()");
+  fvmoms.push_back("JetConstitScaleMomentum");
+  vector<string> fmoms;
+  fmoms.push_back("ActiveArea");
+
+
+  ToolHandleArray<IJetExecuteTool> hjettools;	
+	hjettools.push_back(iclustModTool);
+	hjettools.push_back(pjrf);
+
+	//JetAlgorithm *jetalg = new JetAlgorithm("jetalg");
+  //EL_RETURN_CHECK("initialize()", jetalg->setProperty("Tools", jettools));
+
+	
+  //JetDumper* pdmp_akt4 = new JetDumper("dump_akt4");
+  //cout << "Tool dump_akt4: " << ToolStore::get("dump_akt4") << endl;
+  //EL_RETURN_CHECK("initialize()", pdmp_akt4->setProperty("ContainerName", "AntiKt4LCTopoJets") );
+  //EL_RETURN_CHECK("initialize()", pdmp_akt4->setProperty("Detail", 2));
+  //EL_RETURN_CHECK("initialize()", pdmp_akt4->setProperty("FourVectorMoments", fvmoms));
+  //EL_RETURN_CHECK("initialize()", pdmp_akt4->setProperty("FloatMoments", fmoms));
+  //EL_RETURN_CHECK("initialize()", pdmp_akt4->setProperty("FloatVectorMoments", flvmoms_orig));
+  //EL_RETURN_CHECK("initialize()", pdmp_akt4->setProperty("AssociatedParticleVectors", apvmoms));
+    
+  //    JetDumper* pdumpjets = new JetDumper("dumpjets");
+  //EL_RETURN_CHECK("initialize()", pdumpjets->setProperty("ContainerName", "MyAntiKt4LCTopoJets"));
+  //EL_RETURN_CHECK("initialize()", pdumpjets->setProperty("Detail", 2));
+  //EL_RETURN_CHECK("initialize()", pdumpjets->setProperty("FourVectorMoments", fvmoms));
+  //EL_RETURN_CHECK("initialize()", pdumpjets->setProperty("FloatMoments", fmoms));
+  //EL_RETURN_CHECK("initialize()", pdumpjets->setProperty("FloatVectorMoments", flvmoms));
+  //EL_RETURN_CHECK("initialize()", pdumpjets->setProperty("AssociatedParticleVectors", apvmoms));
+    
+  //ToolHandle<IJetExecuteTool> hdumpjets(pdumpjets);
+  //ToolStore::put(pdumpjets);
+  //hrecs.push_back(hdumpjets);
+    
+  jrun = new JetToolRunner("jetrunner");
+  EL_RETURN_CHECK("initialize()", jrun->setProperty("Tools", hrecs) );
+  cout << "Initializing tools." << endl;
+  EL_RETURN_CHECK("initialize()", jrun->initialize() );
+  jrun->print();
+    
+  /////////////
+
+
+  return EL::StatusCode::SUCCESS;
+}
+
+
+
+EL::StatusCode MakeSKJets :: execute ()
+{
+	std::cout << __LINE__ << std::endl;
+	skClustModSeq->execute();
+  jrun->execute();
+  return EL::StatusCode::SUCCESS;
+}
+
+
+
+EL::StatusCode MakeSKJets :: postExecute ()
+{
+  return EL::StatusCode::SUCCESS;
+}
+
+
+
+EL::StatusCode MakeSKJets :: finalize ()
+{
+  return EL::StatusCode::SUCCESS;
+}
+
+
+
+EL::StatusCode MakeSKJets :: histFinalize ()
+{
+  return EL::StatusCode::SUCCESS;
+}

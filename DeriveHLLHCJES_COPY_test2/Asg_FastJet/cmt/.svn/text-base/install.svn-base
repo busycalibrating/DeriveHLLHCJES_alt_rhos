@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source $ROOTCOREDIR/scripts/external_download.sh
+
+cd fastjet
+./configure --prefix="$target"
+make -j $ROOTCORE_NCPUS
+make check
+make install
+
+cd ../fjcontrib
+./configure --prefix="$target" --fastjet-config="$target/bin/fastjet-config" CXXFLAGS="-fPIC"
+make -j $ROOTCORE_NCPUS
+make check
+make install

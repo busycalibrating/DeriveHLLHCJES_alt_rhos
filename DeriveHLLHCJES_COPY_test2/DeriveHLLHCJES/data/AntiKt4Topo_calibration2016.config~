@@ -1,0 +1,126 @@
+# Dear emacs, treat this as: -*- sh -*-
+######
+#
+#  Numerical Inversion Configuration File for:
+#
+#    Anti-Kt R=4 topo jets at LC scale, weights applied
+#
+
+###########################################################################
+#
+# A. Global settings
+#
+###############
+
+Grid: False
+#Grid: True
+
+###########################################################################
+#
+# B. Jet Selection
+#
+###############
+
+#DoTowers: 0
+#DoGridTowers: 0
+#
+#DoPUCut: 0
+MatchingCut: 	          0.3
+RecoIsolationDR:        0.6
+RecoIsolationPtCut:     7
+TruthIsolationDR:       0.8
+TruthIsolationPtCut:    7
+
+MinPtRatioCut:          0.0
+MaxPtRatioCut:          1.4
+
+WeightFlag:             True
+# True in other script v
+ApplyJES:               False
+
+###########################################################################
+#
+# (optional): Jet reclustering parameters
+#
+###############
+
+Do_Reclustering:        True
+Jet_R:                  0.4
+Recomb_algorithm:       0 # 0 = kt ; 1 = CA ; 2 = antikt
+
+###########################################################################
+
+# The reco jet branche names (in the D3PD) - leave a space after final JetAlgos!
+JetAlgos:	       	      AntiKt4LCTopoJets AntiKt4EMTopoJets 
+# AntiKt4EMPFlowJets 
+EventShapes:            Kt4LCTopoEventShape Kt4EMTopoEventShape
+# Kt4EMPFlowEventShape
+
+# Truth jet branch names - must match the above ones!
+TruthJetAlgos:         	AntiKt4TruthJets AntiKt4TruthJets AntiKt4TruthJets
+# Input:      /cluster/warehouse/ddobre/thesis/pythia_local_samples
+Input:      /cluster/warehouse/ddobre/thesis/pythia_local_samples/jetm8_single
+# Input:			/cluster/warehouse/ddobre/thesis/pythia_single_sample
+Output:			mc15_2016_jetm8
+
+# Necessary list for running on the grid
+inputFileList:          mc15_2016.txt
+
+iso_corr1: 1
+iso_true: 1
+pv_cut: 1
+pt_orig1: 1
+E_orig1: 1
+m_orig1: 1
+eta_orig1: 1
+phi_orig1: 1
+pt_corr1: 1
+E_corr1: 1
+m_corr1: 1
+eta_corr1: 1
+phi_corr1: 1
+
+#SA change these back!!
+
+pt_corr2: 1
+E_corr2: 1
+m_corr2: 1
+eta_corr2: 1
+phi_corr2: 1
+
+pt_tower: 1
+E_tower: 1
+m_tower: 1
+eta_tower: 1
+phi_tower: 1
+
+pt_tgrid: 1
+E_tgrid: 1
+m_tgrid: 1
+eta_tgrid: 1
+phi_tgrid: 1
+
+pt_calo: 1
+E_calo: 1
+m_calo: 1
+eta_calo: 1
+phi_calo: 1
+
+tower_rho: 1
+tgrid_rho: 1
+
+pt_true: 1
+E_true: 1
+m_true: 1
+eta_true: 1
+phi_true: 1
+area: 1
+index: 1
+mu: 1
+NPV: 1
+
+RHO: 1
+RHOGRID: 1
+RHOTGRID: 1
+
+

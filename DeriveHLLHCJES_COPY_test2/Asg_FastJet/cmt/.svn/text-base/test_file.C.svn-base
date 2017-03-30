@@ -1,0 +1,1 @@
+#include <fastjet/ClusterSequence.hh>

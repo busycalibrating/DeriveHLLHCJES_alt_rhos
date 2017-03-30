@@ -1,0 +1,82 @@
+#main stuff
+OutputFile: muResidual.root
+EventTree: EventTree
+NTest: 0
+#Cut: IF YOU WANT A CUT
+LocalConfig: Local.config
+MainConfig: Main.config
+
+Fit: [0]+[1]*x
+FitLow: 189.5
+FitHigh: 210.5
+
+Average: [0]
+AverageLow: 42.5
+AverageHigh: 78.5
+
+#list of trees to add to EventTree
+
+NTree: 0
+
+#Tree0: jM
+#Tree1: aM
+#Tree2: TM
+
+#SubTerm0File: singlemuMuArea.root
+SubTerm0Hist: area_0_0_clone_zx0_mean_myfit_par1_myfit_par0_myfit_par0
+SubTerm0Fit: area_0_0_clone_zx0_mean_myfit_par1_myfit_par0_myfit_par0_myfit
+SubTerm0Var: (RHO*area)
+
+#SubTerm1File:
+#SubTerm1Hist: 
+#SubTerm1Fit:
+
+#histogram parameters top down. if you include HParBin0 it defaults to binarray
+NHPar: 2
+
+HPar0: pt_calo - pt_true
+HPar0NBin: 200
+HPar0Low: -400.
+HPar0High: 400.
+#HPar0Bin0:
+
+HPar2: mu
+HPar2NBin: 7
+HPar2Low: 189.5
+HPar2High: 210.5
+HPar2Fac: 1.0
+
+HPar1: NPV
+HPar1NBin: 36
+HPar1Low: 42.5
+HPar1High: 78.5
+#HPar1Fac: 1.0
+
+#iterative parameters --handles 2
+NIPar: 2
+
+IPar0: pt_true
+IPar0NBin: 4
+IPar0Bin0: 20.0
+IPar0Bin1: 40.0
+IPar0Bin2: 80.0
+IPar0Bin3: 120.0
+IPar0Bin4: 200.0
+
+IPar0Fit: [0]+[1]*log(x/25.0)
+IPar0FitLow: 20
+IPar0FitHigh: 200
+
+IPar1: abs(eta_true)
+IPar1NBin: 9
+
+IPar1Bin0: 0.0
+IPar1Bin1: 0.3
+IPar1Bin2: 0.8
+IPar1Bin3: 1.2
+IPar1Bin4: 1.6
+IPar1Bin5: 2.1
+IPar1Bin6: 2.4
+IPar1Bin7: 2.8
+IPar1Bin8: 3.2
+IPar1Bin9: 4.5

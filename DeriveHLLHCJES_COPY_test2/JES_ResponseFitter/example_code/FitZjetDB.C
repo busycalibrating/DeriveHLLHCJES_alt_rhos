@@ -1,0 +1,108 @@
+#include "JES_BalanceFitter.h"
+#include <TFile.h>
+#include <TH1F.h>
+#include <TCanvas.h>
+
+using namespace std;
+
+void DrawHisto(TH1F *h, TString ytit, double min, double max) {
+  h->GetYaxis()->SetRangeUser(min,max); h->SetXTitle("#it{p}_{T}^{ref} [GeV]"); h->SetYTitle(ytit);
+  h->SetStats(0); h->Draw();
+}
+
+int main(int argc, char **argv) {
+  TString arg, fitDesc="Gaussian fit", jetDesc="Anti k_{t} #it{R} = 0.4, EM+JES";
+  if (argc>1) arg=argv[1];
+
+  TString pdf="Zjet_DB_Gauss_fits.pdf";
+
+  gErrorIgnoreLevel=2000; // removes Canvas print statements
+  TFile *f = TFile::Open("example_code/Zjet_DB_data.root");
+
+  double NsigmaForFit = 1.6;
+  JES_BalanceFitter *myFitter = new JES_BalanceFitter(NsigmaForFit);
+  if (arg.Contains("pois")) {
+    myFitter->SetPoisson();
+    pdf="Zjet_DB_Poisson_fits.pdf";
+    fitDesc="Modified Poisson fit";
+  }
+
+  double ptbins[] = {10,17,20,25,30,35,45,60,80,110,160,210,260,310,500};
+
+  TH1F *h_mean = new TH1F("mean","",13,&ptbins[1]);
+  TH1F *h_width = new TH1F("width","",13,&ptbins[1]);
+  TH1F *h_chi2 = new TH1F("chi2","",13,&ptbins[1]);
+  TH1F *h_fitQuants[5], *h_quantiles[5];
+  for (int i=0;i<5;++i) {
+    h_fitQuants[i] = new TH1F(Form("fitQuant%d",i),"",13,&ptbins[1]);
+    h_quantiles[i] = new TH1F(Form("quantile%d",i),"",13,&ptbins[1]);
+  }
+
+  TCanvas *can = new TCanvas();
+  can->SetMargin(0.12,0.04,0.12,0.04);
+
+  can->Print(pdf+"[");
+  for (int bin=1;bin<14;++bin) {
+    double ptlow=ptbins[bin], ptup=ptbins[bin+1];
+    double fitMin = 14.0/ptlow;
+    TH1F *h = (TH1F*)f->Get(Form("DB_RefEtaBin_PtBin%d",bin));
+    h->SetStats(0);
+    myFitter->FitAndDraw(h,fitMin);
+    can->Print(pdf);
+
+    h_mean->SetBinContent(bin,myFitter->GetMean());
+    h_mean->SetBinError(bin,myFitter->GetMeanError());
+    h_width->SetBinContent(bin,myFitter->GetSigma()/myFitter->GetMean());
+    h_width->SetBinError(bin,myFitter->GetSigmaError()/myFitter->GetMean());
+    h_chi2->SetBinContent(bin,myFitter->GetChi2Ndof());
+
+    // Quantiles
+    h_fitQuants[0]->SetBinContent(bin,myFitter->GetMedian());
+    h_fitQuants[1]->SetBinContent(bin,myFitter->GetNeg2SigQuantile());
+    h_fitQuants[2]->SetBinContent(bin,myFitter->GetNeg1SigQuantile());
+    h_fitQuants[3]->SetBinContent(bin,myFitter->GetPos1SigQuantile());
+    h_fitQuants[4]->SetBinContent(bin,myFitter->GetPos2SigQuantile());
+
+    h_quantiles[0]->SetBinContent(bin,myFitter->GetHistoMedian());
+    h_quantiles[1]->SetBinContent(bin,myFitter->GetNeg2SigHistoQuantile());
+    h_quantiles[2]->SetBinContent(bin,myFitter->GetNeg1SigHistoQuantile());
+    h_quantiles[3]->SetBinContent(bin,myFitter->GetPos1SigHistoQuantile());
+    h_quantiles[4]->SetBinContent(bin,myFitter->GetPos2SigHistoQuantile());
+    h_quantiles[0]->SetBinError(bin,myFitter->GetHistoQuantileError());
+    h_quantiles[1]->SetBinError(bin,myFitter->GetHistoQuantileError());
+    h_quantiles[2]->SetBinError(bin,myFitter->GetHistoQuantileError());
+    h_quantiles[3]->SetBinError(bin,myFitter->GetHistoQuantileError());
+    h_quantiles[4]->SetBinError(bin,myFitter->GetHistoQuantileError());
+  }
+  can->SetLogx();
+
+  DrawHisto(h_mean,"Mean of fit",0.8,1.2);
+  myFitter->ResetTextCounters();
+  myFitter->DrawTextLeft(jetDesc); myFitter->DrawTextLeft(fitDesc);
+  can->Print(pdf);
+
+  DrawHisto(h_width,"Width/Mean of fit",0.0,0.6);
+  myFitter->ResetTextCounters();
+  myFitter->DrawTextLeft(jetDesc); myFitter->DrawTextLeft(fitDesc);
+  can->Print(pdf);
+
+  DrawHisto(h_chi2,"#it{#chi}^{2}/#it{n}_{dof} of fit",0,5);
+  myFitter->ResetTextCounters();
+  myFitter->DrawTextLeft(jetDesc); myFitter->DrawTextLeft(fitDesc);
+  can->Print(pdf);
+
+  DrawHisto(h_quantiles[0],"0#sigma, #pm1#sigma and #pm2#sigma quantiles",0,2);
+  for (int i=1;i<5;++i)
+    h_quantiles[i]->Draw("same");
+  for (int i=0;i<5;++i) {
+    h_fitQuants[i]->SetLineColor(kRed+1);
+    h_fitQuants[i]->Draw("same l");
+  }
+  myFitter->ResetTextCounters();
+  myFitter->DrawTextRight(jetDesc); myFitter->DrawTextRight(fitDesc);
+  can->Print(pdf);
+
+  can->Print(pdf+"]");
+
+  printf("\nProduced:\n  %s\n\n",pdf.Data());
+}

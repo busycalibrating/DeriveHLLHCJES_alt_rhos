@@ -1,0 +1,38 @@
+//Steve Alkire
+//17.05.2016
+
+#ifndef DeriveHLLHCJES__CustomRho_H
+#define DeriveHLLHCJES__CustomRho_H
+
+#include "util/MyClusterSequence.hh"
+#include "util/MyJetMedianBackgroundEstimator.hh"
+#include "DeriveHLLHCJES/MyGridMedianBackgroundEstimator.h"
+#include "fastjet/ClusterSequenceArea.hh"
+
+#include "fastjet/contrib/ConstituentSubtractor.hh"
+#include "fastjet/tools/GridMedianBackgroundEstimator.hh"
+#include "fastjet/tools/Subtractor.hh"
+
+#include "xAODCaloEvent/CaloClusterContainer.h"
+#include "xAODCaloEvent/CaloTowerContainer.h"
+#include "xAODCaloEvent/CaloTowerAuxContainer.h"
+
+class CustomRho{
+  xAOD::CaloCluster::State CaloClusterState;
+  static float defaultsigma;
+ public:
+  
+  //rho by grid method in symmetric eta window
+  float Grid(const xAOD::CaloTowerContainer* towers, float etalow, float etahigh, float r, float &sigma);
+  float Grid(const xAOD::CaloClusterContainer* clusters, float etalow, float etahigh, float r, float &sigma);
+  
+ CustomRho():CaloClusterState(xAOD::CaloCluster::UNCALIBRATED){}
+ CustomRho(xAOD::CaloCluster::State state):CaloClusterState(state){}
+  
+  ~CustomRho(){}
+  
+  ClassDef(CustomRho, 1);
+};
+
+#endif
+

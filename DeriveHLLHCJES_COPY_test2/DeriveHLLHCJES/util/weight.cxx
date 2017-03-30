@@ -1,0 +1,374 @@
+#ifndef WEIGHT_H
+#define WEIGHT_H
+#include <iostream>
+#include <stdio.h>
+
+#include "TCut.h"
+#include "TTree.h"
+#include "TCanvas.h"
+#include "TH1F.h"
+#include "TH2F.h"
+#include "TList.h"
+#include "TEventList.h"
+#include "TROOT.h"
+#include "TKey.h"
+#include "TFile.h"
+#include "TSystem.h"
+#include "TColor.h"
+#include "TLegend.h"
+#include "TF2.h"
+#include "TFitResultPtr.h"
+#include "TFitResult.h"
+#include "TH3F.h"
+#include "TApplication.h"
+#include "CalibTools.h"
+#include "TStyle.h"
+#include "TObjString.h"
+#include "TList.h"
+#include "TEnv.h"
+
+int SampleNumber(const char* file_name, TList* sample_list){
+  TString fileS(file_name);
+  FOR_EACH(sample_list, if(fileS.Contains(((TObjString*)sample_list->At(IiI))->GetString())) return IiI;)
+  return -1;
+} 
+
+int main(int argc, char* argv[]){
+  std::cout<<"."<<std::endl;
+  //gROOT->ProcessLine(".L Functions.C++");
+  //gROOT->ProcessLine(".L AtlasStyle.C");
+  //std::cout<<"."<<std::endl;
+  //gROOT->ProcessLine("SetAtlasStyle();");
+  //std::cout<<"."<<std::endl;
+  
+  TList* sample_list = new TList;
+  std::vector<long> sample_count;
+  std::vector<float> cross_section;
+  std::vector<float> efficiency;
+  std::vector<int> weight;
+
+  /*
+  sample_list->Add(new TObjString(".147910"));sample_count.push_back(0);
+  cross_section.push_back(7.9310E+07); efficiency.push_back(9.6929E-01); weight.push_back(0); 
+  sample_list->Add(new TObjString(".147911"));sample_count.push_back(0);
+  cross_section.push_back(7.9310E+07); efficiency.push_back(3.1037E-04); weight.push_back(0);
+  sample_list->Add(new TObjString(".147912"));sample_count.push_back(0);
+  cross_section.push_back(6.4170E+04); efficiency.push_back(5.4276E-03); weight.push_back(0);
+  sample_list->Add(new TObjString(".147913"));sample_count.push_back(0);
+  cross_section.push_back(1.6664E+03); efficiency.push_back(1.9139E-03); weight.push_back(0);
+  sample_list->Add(new TObjString(".147914"));sample_count.push_back(0);
+  cross_section.push_back(2.7646E+01); efficiency.push_back(1.4296E-03); weight.push_back(0);
+  sample_list->Add(new TObjString(".147915"));sample_count.push_back(0);
+  cross_section.push_back(3.0317E-01); efficiency.push_back(5.5040E-03); weight.push_back(0);
+  sample_list->Add(new TObjString(".147916"));sample_count.push_back(0);
+  cross_section.push_back(7.5078E-03); efficiency.push_back(1.5252E-02); weight.push_back(0);
+  sample_list->Add(new TObjString(".147917"));sample_count.push_back(0);
+  cross_section.push_back(1.3760E-03); efficiency.push_back(7.6369E-02); weight.push_back(0);
+  */
+
+  /*
+  sample_list->Add(new TObjString(".361001")); sample_count.push_back(0);
+  cross_section.push_back(7.8420E+07); efficiency.push_back(2.4819E-02); weight.push_back(0);
+  sample_list->Add(new TObjString(".361002")); sample_count.push_back(0);
+  cross_section.push_back(2.4334E+06); efficiency.push_back(1.0040E-02); weight.push_back(0);
+  sample_list->Add(new TObjString(".361003")); sample_count.push_back(0);
+  cross_section.push_back(2.6454E+04); efficiency.push_back(1.1798E-02); weight.push_back(0);
+  sample_list->Add(new TObjString(".361004")); sample_count.push_back(0);
+  cross_section.push_back(2.5464E+02); efficiency.push_back(1.3440E-02); weight.push_back(0);
+  sample_list->Add(new TObjString(".361005")); sample_count.push_back(0);
+  cross_section.push_back(4.5536E+00); efficiency.push_back(1.4577E-02); weight.push_back(0);
+  sample_list->Add(new TObjString(".361006")); sample_count.push_back(0);
+  cross_section.push_back(2.5752E-01); efficiency.push_back(1.0018E-02); weight.push_back(0);
+  sample_list->Add(new TObjString(".361007")); sample_count.push_back(0);
+  cross_section.push_back(1.6214E-02); efficiency.push_back(1.1120E-02); weight.push_back(0);
+  sample_list->Add(new TObjString(".361008")); sample_count.push_back(0);
+  cross_section.push_back(6.2505E-04); efficiency.push_back(1.0331E-02); weight.push_back(0);
+  sample_list->Add(new TObjString(".361009")); sample_count.push_back(0);
+  cross_section.push_back(1.9640E-05); efficiency.push_back(1.2110E-02); weight.push_back(0);
+  */
+  
+  sample_list->Add(new TObjString(".361020")); sample_count.push_back(0);
+  cross_section.push_back(7.8420E+07); efficiency.push_back(1.0240E+00); weight.push_back(0);
+  sample_list->Add(new TObjString(".361021")); sample_count.push_back(0);
+  cross_section.push_back(7.8420E+07); efficiency.push_back(6.7198E-04); weight.push_back(0);
+  sample_list->Add(new TObjString(".361022")); sample_count.push_back(0);
+  cross_section.push_back(2433200); efficiency.push_back(3.3264E-04); weight.push_back(0);
+  sample_list->Add(new TObjString(".361023")); sample_count.push_back(0);
+  cross_section.push_back(26454); efficiency.push_back(3.1953E-04); weight.push_back(0);
+  sample_list->Add(new TObjString(".361024")); sample_count.push_back(0);
+  cross_section.push_back(254.63); efficiency.push_back(5.3009E-04); weight.push_back(0);
+  sample_list->Add(new TObjString(".361025")); sample_count.push_back(0);
+  cross_section.push_back(4.5535); efficiency.push_back(9.2325E-04); weight.push_back(0);
+  sample_list->Add(new TObjString(".361026")); sample_count.push_back(0);
+  cross_section.push_back(.25753); efficiency.push_back(9.4016E-04); weight.push_back(0);
+  sample_list->Add(new TObjString(".361027")); sample_count.push_back(0);
+  cross_section.push_back(.016215); efficiency.push_back(3.9282E-04); weight.push_back(0);
+  sample_list->Add(new TObjString(".361028")); sample_count.push_back(0);
+  cross_section.push_back(.00062502); efficiency.push_back(1.0162E-02); weight.push_back(0);
+  sample_list->Add(new TObjString(".361029")); sample_count.push_back(0);
+  cross_section.push_back(.000019639); efficiency.push_back(1.2054E-02); weight.push_back(0);
+  sample_list->Add(new TObjString(".361030")); sample_count.push_back(0);
+  cross_section.push_back(.0000011962); efficiency.push_back(5.8935E-03); weight.push_back(0);
+  sample_list->Add(new TObjString(".361031")); sample_count.push_back(0);
+  cross_section.push_back(.000000042258); efficiency.push_back(2.7015E-03); weight.push_back(0);
+  sample_list->Add(new TObjString(".361032")); sample_count.push_back(0);
+  cross_section.push_back(.0000000010367); efficiency.push_back(4.2502E-04); weight.push_back(0);
+  
+  /*
+  sample_list->Add(new TObjString(".426001")); sample_count.push_back(0);
+  cross_section.push_back(421630000); efficiency.push_back(3.4956E-03); weight.push_back(1);
+  sample_list->Add(new TObjString(".426002")); sample_count.push_back(0);
+  cross_section.push_back(48024000); efficiency.push_back(4.1070E-04); weight.push_back(1);
+  sample_list->Add(new TObjString(".426003")); sample_count.push_back(0);
+  cross_section.push_back(1908400); efficiency.push_back(1.4988E-04); weight.push_back(1);
+  sample_list->Add(new TObjString(".426004")); sample_count.push_back(0);
+  cross_section.push_back(173620); efficiency.push_back(1.8654E-05); weight.push_back(1);
+  sample_list->Add(new TObjString(".426005")); sample_count.push_back(0);
+  cross_section.push_back(5259.4); efficiency.push_back(1.1846E-05); weight.push_back(1);
+  sample_list->Add(new TObjString(".426006")); sample_count.push_back(0);
+  cross_section.push_back(276.12); efficiency.push_back(8.3645E-06); weight.push_back(1);
+  sample_list->Add(new TObjString(".426007")); sample_count.push_back(0);
+  cross_section.push_back(26.41); efficiency.push_back(6.6710E-06); weight.push_back(1);
+  sample_list->Add(new TObjString(".426008")); sample_count.push_back(0);
+  cross_section.push_back(.077298); efficiency.push_back(8.3211E-05); weight.push_back(1);
+  sample_list->Add(new TObjString(".426009")); sample_count.push_back(0);
+  cross_section.push_back(.002747); efficiency.push_back(9.0501E-05); weight.push_back(1);
+  */
+
+  //TApplication* rootapp = new TApplication("addbranch", &argc, argv);
+  TString env_name(argv[1]);
+  TEnv* localE = new TEnv(env_name);
+  TString Postfix = localE->GetValue("Postfix","NOCUT");
+  std::vector<TString> JetAlgos = Vectorize(localE->GetValue("JetAlgos","AntiKt4LCTopoJets AntiKt4EMTopoJets"));
+  int JetAlgossize = JetAlgos.size(); 
+  for(int i = 0; i < JetAlgossize; ++i) JetAlgos.push_back(JetAlgos.at(i)+Postfix);
+
+  for (int n = 2; n < argc; n++){
+    std::cout <<"Enumerating sample : "<< n << " - " << argv[ n ] << std::endl;
+    
+    TString fileS(argv[ n ]);
+    //TFile *f0 = TFile::Open("/scratch/alkire/user.alkire.t0.mc14_13TeV.147911.Pythia8_AU2CT10_jetjet_JZ1W.merge.DAOD_JETM1.e2743_s1982_s2008_r5787_r5853_p1815_hist-output.root.15715014/user.alkire.4697784._000003.hist-output.root");
+     
+    TFile *f0 = TFile::Open(fileS,"update");
+    for(int t = 0; t < JetAlgos.size(); ++t){
+      std::cout << JetAlgos.at(t) << std::endl;
+      TTree* JetTree = (TTree*)f0->Get(JetAlgos.at(t));
+      TH1F* h_events = (TH1F*) f0->Get("h_events");
+      //double evn = h_events->GetEntries();
+
+      std::cout << "-----> LOOP:" << t << "-----" << JetTree << std::endl;
+      TObjArray* branches = JetTree->GetListOfBranches();
+      
+      TList* branchesToConsiderRemoval = new TList;
+      branchesToConsiderRemoval->Add(new TObjString("S"));
+      branchesToConsiderRemoval->Add(new TObjString("NS"));
+      branchesToConsiderRemoval->Add(new TObjString("X"));
+      branchesToConsiderRemoval->Add(new TObjString("E"));
+      branchesToConsiderRemoval->Add(new TObjString("EW"));
+      
+      TList* branchesToRemove = new TList;
+      
+      for(int b = 0 ; b < branchesToConsiderRemoval->GetEntries() ; ++b){
+	for(int i = 0 ; i < branches->GetEntries(); ++i){
+	  if(TString(((TBranch*)branches->At(i))->GetName()).EqualTo(((TObjString*)branchesToConsiderRemoval->At(b))->GetString())){
+	    branchesToRemove->Add((TObjString*)branchesToConsiderRemoval->At(b));
+	  }
+	}
+      }
+      
+      for(int c = 0 ; c < branchesToRemove->GetSize(); ++c){
+	std::cout<<"Removing "<< ((TObjString*)branchesToRemove->At(c))->GetString() << std::endl;  
+	branches->Remove(JetTree->GetListOfBranches()->Remove(JetTree->GetBranch(((TObjString*)branchesToRemove->At(c))->GetString())));
+	std::cout<<"Removed." << std::endl;  
+      }
+      
+      branches = JetTree->GetListOfBranches();
+      for(int i = 0 ; i < branches->GetEntries(); ++i){
+	std::cout<<((TBranch*)branches->At(i))->GetName()<<std::endl;
+      }
+      
+      float fTW; //float
+      JetTree->SetBranchAddress("EventWeight",&fTW);
+      int fTS = -1;
+      TBranch *brS = JetTree->Branch("S",&fTS,"S/I");
+      long entries = h_events->GetEntries();
+      //long entries = JetTree->GetEntries();
+      fTS = SampleNumber(fileS, sample_list);  
+      if(fTS==-1) std::cout << "SAMPLE NOT FOUND!!!!!!!!!!!!!!!" <<std::endl;
+      if(weight.at(fTS)){
+	for(long i = 0; i<entries; ++i){
+	  JetTree->GetEntry(i);
+	  sample_count.at(fTS)+=fTW;
+	  brS->Fill();
+	}
+      }else{
+	for(long i = 0; i<entries; ++i){
+	  sample_count.at(fTS)++;
+	  brS->Fill();
+	}
+      }
+    }
+    f0->Write();
+    f0->Close();
+    delete f0;
+  }
+  
+  for(unsigned i = 0; i < sample_count.size(); ++i){
+    std::cout<<"NUMBER OF SAMPLES i: "<<i<<" : "<<sample_count.at(i)<<" cross section: "<< cross_section.at(i) << " eff.: "<< efficiency.at(i)<<std::endl;
+    if(sample_count.at(i)<=0) sample_count.at(i)=1;
+  }
+  
+  for (int n = 2; n < argc; n++){
+    std::cout <<"Adding count to sample : "<< n << " - " << argv[ n ] << std::endl;
+    
+    TString fileS(argv[ n ]);
+    TFile *f0 = TFile::Open(fileS,"update");
+    for(int t = 0; t < JetAlgos.size(); ++t){
+      
+      TTree* JetTree = (TTree*)f0->Get(JetAlgos.at(t));
+      //TH1F* h_events = (TH1F*) f0->Get("h_events");
+      //TTree* JetTree = (TTree*)gDirectory->Get(tree_name);
+      TObjArray* branches = JetTree->GetListOfBranches();
+      bool contains_branch = false;
+      for(int i = 0 ; i < branches->GetEntries(); ++i){
+	std::cout<<((TBranch*)branches->At(i))->GetName()<<std::endl;
+	if(TString(((TBranch*)branches->At(i))->GetName()).EqualTo("NS") || TString(((TBranch*)branches->At(i))->GetName()).EqualTo("E") || TString(((TBranch*)branches->At(i))->GetName()).EqualTo("X") || TString(((TBranch*)branches->At(i))->GetName()).EqualTo("EW")){
+	  std::cout<<"Already contains branch NS, E, or X  --ending"<<std::endl;
+	  contains_branch = true;
+	}
+      }
+      if(contains_branch) continue;
+      
+      float fTNS;
+      float fTX;
+      float fTE;
+      float fTW; //float
+      float fTEW;
+      
+      JetTree->SetBranchAddress("EventWeight",&fTW);
+      
+      TBranch *brNS = JetTree->Branch("NS",&fTNS,"NS/F");
+      TBranch *brX = JetTree->Branch("X",&fTX,"X/F");
+      TBranch *brE = JetTree->Branch("E",&fTE,"E/F");
+      TBranch *brEW = JetTree->Branch("EW",&fTEW,"EW/F");
+      long entries = JetTree->GetEntries();
+      for(long i = 0; i<entries; ++i){
+	int sample_number = SampleNumber(fileS, sample_list);
+	fTNS = 1.; fTX = 0; fTE = 0;
+	if(sample_number >= 0){
+	  fTNS=sample_count.at(sample_number);
+	  fTX=cross_section.at(sample_number);
+	  fTE=efficiency.at(sample_number);      
+	}
+	JetTree->GetEntry(i);
+	fTEW = fTX*fTE*fTW/fTNS;
+	brNS->Fill();
+	brE->Fill();
+	brX->Fill();
+	brEW->Fill();
+      }
+      //std::cout<<"Number of tree entries: " << JetTree->GetEntries() << " ...branch entries: " << brNS->GetEntries() << std::endl;
+    }
+    f0->Write();
+    f0->Close();
+    delete f0;
+  }
+  
+  
+  
+  std::cout<<"ENDDDDDD!"<<std::endl;
+  //rootapp->Run();
+  return 0;
+}
+
+/*
+using namespace std;
+
+
+void reweight_function(string sample){
+
+    char inputName[200];
+   
+    sprintf(inputName,"J%s_merge.root",sample.c_str());
+
+    cout<<"inputName  :  "<<inputName<<endl;
+
+    TFile f1(inputName,"update");
+    
+    f1.cd();
+    TH1F* h_events = (TH1F*) gDirectory->Get("h_events");
+    double evn = h_events->GetEntries();
+
+    double xs;
+    double eff;
+
+    TString input = inputName;
+    
+    if (input.Contains("JZ0_merge.root")){ xs = 7.8420E+07;  eff = 9.7193E-01; }
+    if (input.Contains("JZ1_merge.root")){ xs = 7.8420E+07;  eff = 2.7903E-04; }
+    if (input.Contains("JZ2_merge.root")){ xs = 5.7312E+04;  eff = 5.2261E-03; }
+    if (input.Contains("JZ3_merge.root")){ xs = 1.4478E+03;  eff = 1.8068E-03; }
+    if (input.Contains("JZ4_merge.root")){ xs = 2.3093E+01;  eff = 1.3276E-03; }
+    if (input.Contains("JZ5_merge.root")){ xs = 2.3793E-01;  eff = 5.0449E-03; }
+    if (input.Contains("JZ6_merge.root")){ xs = 5.4279E-03;  eff = 1.3886E-02; }
+    if (input.Contains("JZ7_merge.root")){ xs = 9.4172E-04;  eff = 6.7141E-02; }
+
+    cout<<"xs: "<<xs<<endl;
+    cout<<"eff: "<<eff<<endl;
+
+    double reweight = xs*eff/evn;
+
+    double EvweightLC;   double new_weightLC;
+    double EvweightEM;   double new_weightEM;
+
+    TTree *LC = (TTree*)f1.Get("AntiKt4LCTopoJets");
+    TTree *EM = (TTree*)f1.Get("AntiKt4EMTopoJets");
+
+    TBranch* newBranchLC = LC->Branch("new_EventWeight",&new_weightLC, "new_weightLC/D");
+    TBranch* newBranchEM = EM->Branch("new_EventWeight",&new_weightEM, "new_weightEM/D");
+
+    LC->SetBranchAddress("EventWeight",&EvweightLC);
+    EM->SetBranchAddress("EventWeight",&EvweightEM);
+
+    int entriesLC = LC->GetEntries();
+    int entriesEM = EM->GetEntries();
+    
+    for (int i=0; i<entriesLC; i++) {
+      LC->GetEntry(i);
+      new_weightLC = EvweightLC*reweight;
+      newBranchLC->Fill();
+    }
+    LC->Write("",TObject::kOverwrite);
+    
+
+      for (int i=0; i<entriesEM; i++) {
+	EM->GetEntry(i);
+	new_weightEM = EvweightEM*reweight;
+	newBranchEM->Fill();
+      }
+      EM->Write("",TObject::kOverwrite);
+
+}
+
+void reweight_allJs() {
+
+
+  //  reweight_function("Z0");
+  //  cout<<"JZ0 reweighted "<<endl;
+    reweight_function("Z1");
+    cout<<"JZ1 reweighted "<<endl;
+    reweight_function("Z2");
+    cout<<"JZ2 reweighted "<<endl;
+    reweight_function("Z3");
+    cout<<"JZ3 reweighted "<<endl;
+    reweight_function("Z4");
+    cout<<"JZ4 reweighted "<<endl;
+    reweight_function("Z5");
+    cout<<"JZ5 reweighted "<<endl;
+    reweight_function("Z6");
+    cout<<"JZ6 reweighted "<<endl;
+    reweight_function("Z7");
+    cout<<"JZ7 reweighted "<<endl;
+}
+*/
+#endif //WEIGHT_H

@@ -1,0 +1,193 @@
+//#include <vector>
+//#include "T
+#include "TCollection.h"
+#include "TObjString.h"
+#include "TObjArray.h"
+#include "TTree.h"
+#include "TLorentzVector.h"
+#include "TAxis.h"
+#include "TEnv.h"
+#include "TFile.h"
+
+#include <iostream>
+
+
+
+
+class LoTree{
+ public:
+  TTree* m_tree;
+  TTree* tree(){return m_tree;}
+  
+  //LoTree(){}
+  LoTree (TTree* tree){
+    m_tree = tree;
+    m_tree->Branch("pt", "vector<float>",&pt);
+    m_tree->Branch("eta", "vector<float>",&eta);
+    m_tree->Branch("phi", "vector<float>",&phi);
+    m_tree->Branch("m", "vector<float>",&m);
+    m_tree->Branch("e", "vector<float>",&e);
+    m_tree->Branch("tpt", "vector<float>",&tpt);
+    m_tree->Branch("teta", "vector<float>",&teta);
+    m_tree->Branch("tphi", "vector<float>",&tphi);
+    m_tree->Branch("tm", "vector<float>",&tm);
+    m_tree->Branch("te", "vector<float>",&te);
+    m_tree->Branch("EW",&EW,"EW/F");
+  }
+  
+  void clear(){
+    e.clear();
+    pt.clear();
+    eta.clear();
+    phi.clear();
+    m.clear();
+    te.clear();
+    tpt.clear();
+    teta.clear();
+    tphi.clear();
+    tm.clear();
+    EW = 1.;
+  }
+  
+  std::vector<float> e  ; 
+  std::vector<float> pt ;
+  std::vector<float> eta; 
+  std::vector<float> phi; 
+  std::vector<float> m  ;
+  std::vector<float> te  ; 
+  std::vector<float> tpt ;
+  std::vector<float> teta; 
+  std::vector<float> tphi; 
+  std::vector<float> tm  ;
+  float EW;
+};
+
+TString Devectorize(std::vector<TString> strs, TString sep = " ")
+{
+  if(strs.size()==0) return TString("");
+  TString result(strs.at(0));
+  for(int i = 1; i < strs.size(); ++i){
+    result+=(sep+strs.at(i));
+  }
+  return result;
+}
+
+TString Devectorize(std::vector<double> vals, TString sep = " ")
+{
+  
+  if(vals.size()==0) return TString("");
+  TString result(TString::Format("%4.3f",vals.at(0)));
+  for(int i = 1; i < vals.size(); ++i){
+    result+=(sep+TString::Format("%4.3f",vals.at(i)));
+  }
+  return result;
+}
+
+void ReplaceNONEs(std::vector<TString> str, const char*  var1 = "NONE", const char* var2=""){
+  for (int i = 0 ; i < str.size(); ++i){
+    str.at(i).ReplaceAll(var1,var2);
+  }
+}
+
+std::vector<TString> Vectorize(TString str, TString sep = " ")
+{
+  std::vector<TString> result;
+  TObjArray* tokens = str.Tokenize(sep);
+  TIter istr(tokens);
+  while (TObjString* os=(TObjString*)istr()){
+    TString str = os->GetString();
+    result.push_back(str=="NONE" ? "" : str);
+  }
+  delete tokens;
+  return result;
+}
+
+std::vector<double> VectorizeD(TString str, TString sep = " ")
+{
+  std::vector<double> result;
+  TObjArray* tokens = str.Tokenize(sep);
+  TIter istr(tokens);
+  while (TObjString* os=(TObjString*)istr())
+    result.push_back(atof(os->GetString()));
+  delete tokens;
+  return result;
+}
+
+//fabs(eta_det), mu, NPV
+float GetResidualOffset( float abseta, float mu, float NPV, float mu_ref, float NPV_ref, std::vector<double> OffsetMu, std::vector<double> OffsetNPV, TAxis *OffsetBins ){
+
+  //mu rescaling NOT FOR UPGRADE
+  //const double muCorr = m_isData ? mu : mu*m_muSF;
+  //NPV beamspot correction NOT FOR UPGRADE
+  //const double NPVCorr = GetNPVBeamspotCorrection(NPV);
+
+  double alpha = OffsetMu[0], beta = OffsetNPV[0], etaEdge=0;
+  int bin=1;
+  for (;bin<=OffsetBins->GetNbins();++bin) {
+    etaEdge = OffsetBins->GetBinLowEdge(bin);
+    const double width=OffsetBins->GetBinWidth(bin);
+    if (abseta<etaEdge+width) break;
+    alpha += width*OffsetMu[bin];
+    beta  += width*OffsetNPV[bin];
+  }
+  alpha += OffsetMu[bin]*(abseta-etaEdge);
+  beta  += OffsetNPV[bin]*(abseta-etaEdge);
+
+  return (alpha*(mu-mu_ref) + beta*(NPV-NPV_ref));
+ }
+
+float GetConstOffset( float abseta, std::vector<double> OffsetConst, TAxis *OffsetBins ){
+
+  //mu rescaling NOT FOR UPGRADE
+  //const double muCorr = m_isData ? mu : mu*m_muSF;
+  //NPV beamspot correction NOT FOR UPGRADE
+  //const double NPVCorr = GetNPVBeamspotCorrection(NPV);
+
+  double gamma = OffsetConst[0], etaEdge=0;
+  int bin=1;
+  for (;bin<=OffsetBins->GetNbins();++bin) {
+    etaEdge = OffsetBins->GetBinLowEdge(bin);
+    const double width=OffsetBins->GetBinWidth(bin);
+    if (abseta<etaEdge+width) break;
+    gamma += width*OffsetConst[bin];
+  }
+  gamma  += OffsetConst[bin]*(abseta-etaEdge);
+
+  return gamma;
+ }
+
+
+
+void JetPileupCorrection(float &pt, float &eta, float &phi, float &e, float &m, TLorentzVector &jet_calo, TLorentzVector &jet_origin, float AREA, float RHO, float offsetET, bool saveNegative=true){
+  
+  if ( jet_calo.E() < jet_calo.M() ) {
+    std::cout << "JetPileupCorrection::calibrateImpl : Current jet has mass=" << jet_calo.M() << " GeV, which is greater than it's energy. E/M Ratio=" << jet_calo.E()/jet_calo.M() << " Aborting."<<std::endl;
+    return;
+  }
+
+  //Retrieve the offset correction from the residual correction class
+  //double offsetET = GetResidualOffset(fabs(eta_det), mu, NPV);
+  
+  //Calculate the pT after jet areas and residual offset
+  float pT_offset = jet_calo.Pt() - RHO*AREA - offsetET;
+  
+  //Set the jet pT to 10 MeV if the pT is negative after the jet area and residual offset corrections 
+  float pileup_SF;
+  if(saveNegative){
+    pileup_SF = pT_offset / jet_calo.Pt();
+  }else{
+    pileup_SF = pT_offset >= 0 ? pT_offset / jet_calo.Pt() : 0.00001/jet_calo.Pt();
+  }
+ 
+  pt  = jet_origin.Pt()*pileup_SF;
+  eta = jet_origin.Eta();
+  phi = jet_origin.Phi();
+  e = jet_origin.E()*pileup_SF;
+  m = jet_origin.M()*pileup_SF;
+  
+  //jet_corr.SetPtEtaPhiE(jet_origin.Pt(),jet_origin.Eta(),jet_origin.Phi(),jet_origin.E());
+  //jet_corr*=pileup_SF;
+  //std::cout<<"Vec: "<< jet_origin.Pt()*pileup_SF << " " << jet_origin.E()*pileup_SF << std::endl;
+  //std::cout<<"Lor: "<< jet_corr.Pt() << " " << jet_corr.E() << std::endl;
+}
+

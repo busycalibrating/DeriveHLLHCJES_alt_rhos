@@ -1,0 +1,85 @@
+
+Processing tidyDownload.cxx...
+User:                     ddobre                         [Local]
+Version:                  VPF1_smallsample_07022017      [Local]
+Rtags:                    r7725_r7676_p2666              [Local]
+LocalConfig:              Local.config                   [Local]
+User: ddobre
+Version: VPF1_smallsample_07022017
+InputFolder: /cluster/warehouse/ddobre/thesis/pythia_reduced_07.02.17/
+mkdir: cannot create directory `/cluster/warehouse/ddobre/thesis/pythia_reduced_07.02.17//temp': File exists
+Copying files to temporary folder for rtag r7725_r7676_p2666
+cp -r /cluster/warehouse/ddobre/thesis/pythia_reduced_07.02.17//user.ddobre*.VPF1_smallsample_07022017*r7725_r7676_p2666*hist*/ /cluster/warehouse/ddobre/thesis/pythia_reduced_07.02.17//temp/
+Adding weight variables
+weight /cluster/warehouse/ddobre/thesis/pythia_reduced_07.02.17//temp/*/*
+.
+Enumerating sample : 2 - /cluster/warehouse/ddobre/thesis/pythia_reduced_07.02.17//temp/user.ddobre.VPF1_smallsample_07022017.361020.e3569_s2576_s2132_r7725_r7676_p2666_hist/user.ddobre.10661011._000001.hist-output.root
+EventWeight
+iso_corr1
+iso_true
+pv_cut
+pt_orig1
+E_orig1
+m_orig1
+eta_orig1
+phi_orig1
+pt_corr1
+E_corr1
+m_corr1
+eta_corr1
+phi_corr1
+pt_corr2
+E_corr2
+m_corr2
+eta_corr2
+phi_corr2
+pt_calo
+E_calo
+m_calo
+eta_calo
+phi_calo
+tower_rho
+tgrid_rho
+pt_true
+E_true
+m_true
+eta_true
+phi_true
+area
+index
+mu
+NPV
+RHO
+RHOTGRID
+RHOGRID
+
+ *** Break *** segmentation violation
+
+
+
+===========================================================
+There was a crash.
+This is the entire stack trace of all threads:
+===========================================================
+#0  0x0000003dc70ac7be in waitpid () from /lib64/libc.so.6
+#1  0x0000003dc703e5c9 in do_system () from /lib64/libc.so.6
+#2  0x00007fe4baa7c17a in TUnixSystem::StackTrace() () from /cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase/x86_64/root/6.04.16-x86_64-slc6-gcc49-opt/lib/libCore.so
+#3  0x00007fe4baa7e14c in TUnixSystem::DispatchSignals(ESignals) () from /cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase/x86_64/root/6.04.16-x86_64-slc6-gcc49-opt/lib/libCore.so
+#4  <signal handler called>
+#5  main () at /cluster/warehouse/ddobre/thesis/DeriveHLLHCJES_test2/DeriveHLLHCJES/util/weight.cxx:159
+===========================================================
+
+
+The lines below might hint at the cause of the crash.
+If they do not help you then please submit a bug report at
+http://root.cern.ch/bugs. Please post the ENTIRE stack trace
+from above as an attachment in addition to anything else
+that might help us fixing this issue.
+===========================================================
+#5  main () at /cluster/warehouse/ddobre/thesis/DeriveHLLHCJES_test2/DeriveHLLHCJES/util/weight.cxx:159
+===========================================================
+
+
+combining to output file: /cluster/warehouse/ddobre/thesis/pythia_reduced_07.02.17//r7725_r7676_p2666.root
+hadd /cluster/warehouse/ddobre/thesis/pythia_reduced_07.02.17//r7725_r7676_p2666.root /cluster/warehouse/ddobre/thesis/pythia_reduced_07.02.17//temp/*/* &> /cluster/warehouse/ddobre/thesis/pythia_reduced_07.02.17//temp/shittyhaddoutput.txt
+All done with file weighting and combination.

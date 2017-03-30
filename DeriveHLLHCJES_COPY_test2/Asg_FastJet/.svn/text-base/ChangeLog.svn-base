@@ -1,0 +1,51 @@
+2016-12-09 Nils Krumnack <Nils.Erik.Krumnack@cern.ch>
+	* updated fastjet version to 3.21 and contrib to 1.025 (tarball
+	  provided by Pierre-Antoine Delsart)
+	* tagging as Asg_FastJet-03-21-25
+
+2016-08-20 Nils Krumnack <Nils.Erik.Krumnack@cern.ch>
+	* switched contrib version to 1.024
+	* tagging as Asg_FastJet-03-11-24
+
+2015-02-13 Nils Krumnack <Nils.Erik.Krumnack@cern.ch>
+	* fixed a bug where I accidentally picked up contribution 1.005
+	  instead of contribution 1.015
+	* going into Asg_FastJet-03-11-15-01
+
+2015-02-12 Nils Krumnack <Nils.Erik.Krumnack@cern.ch>
+	* switched to fastjet 3.11 and contribution 1.015
+	* going into Asg_FastJet-03-11-15
+
+2014-10-29 Nils Krumnack <Nils.Erik.Krumnack@cern.ch>
+	* switched contributions to fastjet contributions 1.014
+	* going into Asg_FastJet-03-06-14
+
+2014-08-26 Nils Krumnack <Nils.Erik.Krumnack@cern.ch>
+	* fixed the compilation of the contribs to include -fPIC, so that
+	  there static libraries can be linked into dynamic libraries
+	* removed the contrib libraries from being linked automatically
+	  into the user libraries, they should instead be specified in the
+	  user package
+	* going into Asg_FastJet-00-00-10
+
+2014-08-25 Nils Krumnack <Nils.Erik.Krumnack@cern.ch>
+	* fixed the library list, to link all libraries starting with lib
+	* going into Asg_FastJet-00-00-09
+
+2014-07-31 Nils Krumnack <Nils.Erik.Krumnack@cern.ch>
+	* fixed a problem from the last commit, where linker-flags where
+	  set in PACKAGE_OBJFLAGS instead of PACKAGE_LIBFLAGS...
+	* going into Asg_FastJet-00-00-08
+
+2014-07-31 Nils Krumnack <Nils.Erik.Krumnack@cern.ch>
+	* did some changes suggested by Miles Wu, though not exactly the
+	  way he suggested them
+	* going into Asg_FastJet-00-00-07
+
+2014-07-28 Nils Krumnack <Nils.Erik.Krumnack@cern.ch>
+	* added the remaining libraries to the preload file
+	* going into Asg_FastJet-00-00-06
+
+2014-07-23 Nils Krumnack <Nils.Erik.Krumnack@cern.ch>
+	* merged fastjet and contrib into a single package
+	* going into Asg_FastJet-00-00-05

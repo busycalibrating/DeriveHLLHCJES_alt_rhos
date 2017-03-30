@@ -1,0 +1,12 @@
+# Dear emacs, treat this as: -*- sh -*-
+
+PseudoJetGetter: lcget
+ClusterOutputContainer: PseudoJetLCTopo
+
+SkipNegativeEnergy: 1
+Label: LCTopo
+JetRadius: 0.4
+PtMin: 5000.0
+OutputContainer: MyAntiKt4LCTopoJets
+
+

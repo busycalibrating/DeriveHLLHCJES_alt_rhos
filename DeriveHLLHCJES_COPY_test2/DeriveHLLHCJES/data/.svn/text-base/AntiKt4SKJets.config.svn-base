@@ -1,0 +1,11 @@
+# Dear emacs, treat this as: -*- sh -*-
+PtMin: 2000
+JetRadius: 0.4
+InputClusters: CaloCalTopoClusters
+OutputContainer: AntiKt4SKJets
+ClusterOutputContainer: SKClusters
+SKGridSize: 0.6
+SKRapMax: 2.5
+SKRapMaxApplied: 10
+
+

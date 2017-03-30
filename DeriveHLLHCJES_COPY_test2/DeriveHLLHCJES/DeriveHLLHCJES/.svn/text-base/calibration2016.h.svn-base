@@ -1,0 +1,187 @@
+#ifndef DeriveHLLHCJES__calibration2016_H
+#define DeriveHLLHCJES__calibration2016_H
+
+#include <EventLoop/Algorithm.h>
+
+// Infrastructure include(s):
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
+#include <map>
+#include "TFile.h"
+#include "TChain.h"
+#include "TEnv.h"
+#include "TH2F.h"
+#include "TH3F.h"
+#include "TProfile2D.h"
+#include "TGraphErrors.h"
+#include "TGraph2DErrors.h"
+#include "TROOT.h"
+#include "TSystem.h"
+#include "xAODRootAccess/Init.h"
+#include "xAODRootAccess/TEvent.h"
+#include "xAODCaloEvent/CaloClusterContainer.h"
+#include "JetRec/JetRecTool.h"
+#include "JetRec/PseudoJetGetter.h"
+#include "JetRec/JetToolRunner.h"
+
+#include "TLorentzVector.h"
+#include "TString.h"
+#include <ctime>
+
+//PUP
+//#include "CustomPileupStep/CustomCalibrationTool.h"
+//#include "CustomPileup/ExamplePUSubtraction.h"
+//#include "CustomPileupStep/JetArea.h"
+
+
+using namespace std;
+
+typedef vector<TString> StrV;
+typedef TString Str;
+typedef unsigned int uint;
+typedef vector<double> VecD;
+typedef TLorentzVector Jet;
+typedef vector<TLorentzVector> JetV;
+
+//inline void error(TString msg) { printf("\nERROR:\n  %s\n\n",msg.Data()); abort(); };
+//inline void add(StrV &vec, Str a) { vec.push_back(a); };
+
+class JetCalibrationTool;
+//class CustomCalibrationTool;
+
+class calibration2016 : public EL::Algorithm
+{
+    // put your configuration variables here as public variables. 
+    // that way they can be set directly from CINT and python.
+
+    //configuration variables
+    string m_config;
+    bool m_isCollisions;
+    TString JES_config_file;
+
+    clock_t t;
+
+    public:
+
+    //string m_config; //!
+
+    xAOD::TEvent *m_event;  //!
+    xAOD::TStore *m_store;  //!
+
+    int m_eventCounter; //!
+
+    int m_entries; //!
+
+    bool m_applyWeights; //! 
+    bool m_EventWeight; //!
+    bool DoPUCut; //!
+    bool DoUnmatch; //!
+    bool DoTowers; //!
+    bool DoGridTowers; //!
+
+    double m_matchingCut; //!
+    //double m_unmatchingCut; //!
+
+    double m_recoIsoDR, m_recoIsoPtCut; //!
+    double m_trueIsoDR, m_trueIsoPtCut; //!
+
+    double m_pTRatioMin, m_pTRatioMax; //!
+
+    int m_NDeltaEta_bins, m_NR_bins; //!
+    double m_deltaEta_binMax, m_R_binMin, m_R_binMax; //!
+
+    VecD m_etaBins, m_EBins, m_Rbins, m_excludeEtaPhi, m_ETBins, m_PhiBins; //!
+
+    map<Str,std::vector<float>> m_values; //!
+    map<Str,std::vector<int>> m_Intvalues; //!
+    map<Str,float> m_EVTvalues; //!
+    map<Str,TTree*> m_trees; //!
+
+    map<Str,TH1F*> m_cuts; //!
+
+    bool m_weightFlag; //!
+    float m_weight; //!
+    float m_fileWeight; //!
+
+    StrV m_eventShapes; //!
+    StrV m_jetAlgos; //!
+    StrV m_TruthjetAlgos; //!
+
+    bool m_ApplyJES; //!
+
+    TString m_Postfix; //!
+    bool m_RemakeJets; //!
+
+    //CustomPileupStep* myPileup; //!
+    //JetArea* myJetArea; //!
+    //CustomCalibrationTool* myJES_akt4LC_1; //!
+    //CustomCalibrationTool* myJES_akt4LC_2; //!
+
+    //CustomPileupStep* myPileup2; //!
+    //JetArea* myJetArea2; //!
+    //CustomCalibrationTool* myJES_akt4EM_1; //!
+    //CustomCalibrationTool* myJES_akt4EM_2; //!
+    
+    JetCalibrationTool* myJES_akt4LC_1; //!
+    JetCalibrationTool* myJES_akt4LC_2; //!
+    JetCalibrationTool* myJES_akt4EM_1; //!
+    JetCalibrationTool* myJES_akt4EM_2; //!
+    JetCalibrationTool* myJES_akt4PF_1; //!
+    JetCalibrationTool* myJES_akt4PF_2; //!
+
+    ////////////////////////
+    ToolHandleArray<IPseudoJetGetter> hgets; //!
+    ToolHandleArray<IJetExecuteTool> hrecs; //!
+    //PseudoJetGetter* plcget; //!
+    JetToolRunner * jrun; //!
+    
+
+
+    ////////////////////////
+
+    TH1F *h_events; //!
+
+    TH1F *h_matching_ineff_count; //!
+    TH1F *h_totalTjets_count; //!
+
+    TH1F *h_dr_10Matching; //!
+    TH2F *h_dr_2d_10Matching; //!
+
+    // variables that don't get filled at submission time should be
+    // protected from being send from the submission node to the worker
+    // node (done by the //!)
+    public:
+
+
+
+
+
+    // this is a standard constructor
+    calibration2016();
+    calibration2016 (string config, string JESconfigfile);
+
+    // these are the functions inherited from Algorithm
+    virtual EL::StatusCode setupJob (EL::Job& job);
+    virtual EL::StatusCode fileExecute ();
+    virtual EL::StatusCode histInitialize ();
+    virtual EL::StatusCode changeInput (bool firstFile);
+    virtual EL::StatusCode initialize ();
+    virtual EL::StatusCode execute ();
+    virtual EL::StatusCode postExecute ();
+    virtual EL::StatusCode finalize ();
+    virtual EL::StatusCode histFinalize ();
+
+    int TruthMatch(Jet myjet, JetV jets, Jet &matchingJet);
+    int TruthMatch_index(Jet myjet, JetV jets, Jet &matchingJet,int &index);
+    double DRmin(Jet myjet, JetV jets, double PtMin);
+    double DRmin_test(Jet myjet, JetV jets, Jet &selectedJet);
+    StrV Vectorize(Str str);
+
+    void ControlCut(TString jetAlgo, int i, TString category);
+
+    // this is needed to distribute the algorithm to the workers
+    ClassDef(calibration2016, 1);
+};
+
+#endif

@@ -1,0 +1,868 @@
+
+Processing calibrateJets.cxx...
+mkdir: cannot create directory `/cluster/warehouse/ddobre/thesis/pythia_whole_08.03.17//calibrated': File exists
+DateString:               Sept2016                       [Local]
+InnerFolder:              HLLHC                          [Local]
+CalibFolder:              /afs/cern.ch/user/a/alkire/public/calibrations/16.09.01-testHLLHC/ [Local]
+OutputFolder:             /cluster/warehouse/ddobre/thesis/pythia_whole_08.03.17/ [Local]
+Nevents:                  0                              [Local]
+Offset:                   0                              [Local]
+ConstTermAbsEtaBins:      0 0.9 1.2 1.5 1.8 2.4 2.8 3.2 3.5 4.0 4.3 6.0 [Local]
+ResidualAbsEtaBins:       0 1.2 2.1 3.0 3.2 3.5 4.0 4.3 6.0 [Local]
+JetAlgos:                 AntiKt4EMTopoJets              [Local]
+Postfix:                  NOCUT                          [Local]
+CaloPt:                   pt_calo                        [Local]
+CaloEta:                  eta_calo                       [Local]
+CaloPhi:                  phi_calo                       [Local]
+CaloE:                    E_calo                         [Local]
+CaloM:                    m_calo                         [Local]
+OrigPt:                   pt_orig1                       [Local]
+OrigEta:                  eta_orig1                      [Local]
+OrigPhi:                  phi_orig1                      [Local]
+OrigE:                    E_orig1                        [Local]
+OrigM:                    m_orig1                        [Local]
+CaloA:                    area                           [Local]
+TruePt:                   pt_true                        [Local]
+TrueEta:                  eta_true                       [Local]
+TruePhi:                  phi_true                       [Local]
+TrueE:                    E_true                         [Local]
+TrueM:                    m_true                         [Local]
+Mu:                       mu                             [Local]
+NPV:                      NPV                            [Local]
+JetRho:                   RHOSTRIP_1R RHOSTRIP_2R RHOSTRIP_3R RHOCIRCLE_1R RHOCIRCLE_2R RHOCIRCLE_3R RHODOUGHNUT_1_3R RHODOUGHNUT_1_4R RHODOUGHNUT_2_4R RHODOUGHNUT_2_5R [Local]
+JetTag:                   RHOSTRIP_1R RHOSTRIP_2R RHOSTRIP_3R RHOCIRCLE_1R RHOCIRCLE_2R RHOCIRCLE_3R RHODOUGHNUT_1_3R RHODOUGHNUT_1_4R RHODOUGHNUT_2_4R RHODOUGHNUT_2_5R [Local]
+Rho:                      RHO GLOBAL_RHO                 [Local]
+Tag:                      FINE GLOBAL_RHO                [Local]
+EventWeight:              EventWeight                    [Local]
+useOriginCorrection:      1   # Steve wasn't using - "DON'T WORRY ABOUT IT"; trying to leave it on. [Local]
+doUncalibrated:           1                              [Local]
+doArea:                   1                              [Local]
+doAreaResidual:           1                              [Local]
+doAreaResidualConst:      1   # Constant residual term (high tower) [Local]
+doAreaResidualConstJES:   1                              [Local]
+doAreaResidualJES:        0                              [Local]
+-------------------- CHECK 1: Got initial parameters.
+
+====================================================================================================
+===== 1 ===== Loop 1 [Rtags] :: r7725_r7676_p2794
+====================================================================================================
+
+Opening: /cluster/warehouse/ddobre/thesis/pythia_whole_08.03.17//residual/VPF1_JETM8_test_20170306r7725_r7676_p2794.config
+residualE->print {
+FINEVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTermAbsEtaBins: 0.000 0.900 1.200 1.500 1.800 2.400 2.800 3.200 3.500 4.000 4.300 6.000 [Local]
+FINEVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTerm.AntiKt4EMTopoJets: -8.021 -1.710 -7.659 -2.172 4.466 1.574 1.170 -1.061 -4.529 4.629 1.416 -5.974 [Local]
+GLOBAL_RHOVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTermAbsEtaBins: 0.000 0.900 1.200 1.500 1.800 2.400 2.800 3.200 3.500 4.000 4.300 6.000 [Local]
+GLOBAL_RHOVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTerm.AntiKt4EMTopoJets: -8.361 -1.739 -7.662 -2.204 4.511 1.514 1.214 -1.011 -4.563 4.609 1.451 -7.069 [Local]
+RHOCIRCLE_1RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTermAbsEtaBins: 0.000 0.900 1.200 1.500 1.800 2.400 2.800 3.200 3.500 4.000 4.300 6.000 [Local]
+RHOCIRCLE_1RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTerm.AntiKt4EMTopoJets: -4.329 -3.221 -9.918 1.035 1.822 0.964 17.210 -23.449 18.270 11.071 -0.174 -8.649 [Local]
+RHOCIRCLE_2RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTermAbsEtaBins: 0.000 0.900 1.200 1.500 1.800 2.400 2.800 3.200 3.500 4.000 4.300 6.000 [Local]
+RHOCIRCLE_2RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTerm.AntiKt4EMTopoJets: -14.802 -1.293 -3.309 -2.729 10.785 1.621 7.375 -3.066 -0.768 16.272 -13.100 0.989 [Local]
+RHOCIRCLE_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTermAbsEtaBins: 0.000 0.900 1.200 1.500 1.800 2.400 2.800 3.200 3.500 4.000 4.300 6.000 [Local]
+RHOCIRCLE_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTerm.AntiKt4EMTopoJets: -10.456 -1.226 -7.003 -1.503 5.692 1.519 1.056 -1.057 -1.807 13.694 -10.322 -3.444 [Local]
+RHODOUGHNUT_1_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTermAbsEtaBins: 0.000 0.900 1.200 1.500 1.800 2.400 2.800 3.200 3.500 4.000 4.300 6.000 [Local]
+RHODOUGHNUT_1_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTerm.AntiKt4EMTopoJets: -9.932 -1.058 -7.797 -1.078 5.488 1.903 1.237 -1.492 -4.466 6.187 3.111 -7.283 [Local]
+RHODOUGHNUT_1_4RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTermAbsEtaBins: 0.000 0.900 1.200 1.500 1.800 2.400 2.800 3.200 3.500 4.000 4.300 6.000 [Local]
+RHODOUGHNUT_1_4RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTerm.AntiKt4EMTopoJets: -8.925 -1.342 -6.917 -1.759 4.942 1.710 1.711 -1.034 -4.041 5.232 -0.278 -6.398 [Local]
+RHODOUGHNUT_2_4RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTermAbsEtaBins: 0.000 0.900 1.200 1.500 1.800 2.400 2.800 3.200 3.500 4.000 4.300 6.000 [Local]
+RHODOUGHNUT_2_4RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTerm.AntiKt4EMTopoJets: -8.643 -1.375 -6.946 -2.060 4.746 1.864 1.386 -1.114 -3.528 4.850 0.767 -6.271 [Local]
+RHODOUGHNUT_2_5RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTermAbsEtaBins: 0.000 0.900 1.200 1.500 1.800 2.400 2.800 3.200 3.500 4.000 4.300 6.000 [Local]
+RHODOUGHNUT_2_5RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTerm.AntiKt4EMTopoJets: -8.272 -1.537 -7.497 -1.716 4.397 1.677 1.858 -1.185 -3.356 5.021 0.757 -4.948 [Local]
+RHOSTRIP_1RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTermAbsEtaBins: 0.000 0.900 1.200 1.500 1.800 2.400 2.800 3.200 3.500 4.000 4.300 6.000 [Local]
+RHOSTRIP_1RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTerm.AntiKt4EMTopoJets: -10.132 -0.967 -6.397 -1.329 6.575 2.124 0.289 0.684 -6.423 10.291 3.614 -9.953 [Local]
+RHOSTRIP_2RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTermAbsEtaBins: 0.000 0.900 1.200 1.500 1.800 2.400 2.800 3.200 3.500 4.000 4.300 6.000 [Local]
+RHOSTRIP_2RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTerm.AntiKt4EMTopoJets: -9.385 -1.097 -6.583 -1.224 5.872 1.671 2.093 -1.914 -5.780 5.774 0.275 -10.311 [Local]
+RHOSTRIP_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTermAbsEtaBins: 0.000 0.900 1.200 1.500 1.800 2.400 2.800 3.200 3.500 4.000 4.300 6.000 [Local]
+RHOSTRIP_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.ConstTerm.AntiKt4EMTopoJets: -8.915 -1.315 -6.668 -1.480 5.126 1.905 1.775 -1.470 -4.961 4.743 2.584 -10.816 [Local]
+FINEVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.MuTerm.AntiKt4EMTopoJets: -0.010 0.006 -0.109 -0.230 0.474 -0.186 -0.203 -0.124 0.229 [Local]
+GLOBAL_RHOVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.MuTerm.AntiKt4EMTopoJets: -0.025 0.003 -0.104 -0.239 0.638 -0.267 -0.207 -0.023 0.196 [Local]
+RHOCIRCLE_1RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.MuTerm.AntiKt4EMTopoJets: -0.019 0.000 -0.051 -0.104 0.110 0.067 0.131 0.173 -0.589 [Local]
+RHOCIRCLE_2RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.MuTerm.AntiKt4EMTopoJets: 0.052 -0.037 -0.063 -0.142 -0.072 0.330 -0.148 -0.185 -0.028 [Local]
+RHOCIRCLE_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.MuTerm.AntiKt4EMTopoJets: -0.007 0.005 -0.087 -0.190 0.293 0.041 -0.107 -0.102 0.220 [Local]
+RHODOUGHNUT_1_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.MuTerm.AntiKt4EMTopoJets: -0.006 0.006 -0.093 -0.193 0.428 -0.199 -0.216 -0.099 0.335 [Local]
+RHODOUGHNUT_1_4RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.MuTerm.AntiKt4EMTopoJets: -0.014 0.007 -0.088 -0.225 0.630 -0.269 -0.144 -0.045 0.284 [Local]
+RHODOUGHNUT_2_4RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.MuTerm.AntiKt4EMTopoJets: -0.013 0.006 -0.091 -0.222 0.699 -0.296 -0.205 0.013 0.247 [Local]
+RHODOUGHNUT_2_5RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.MuTerm.AntiKt4EMTopoJets: -0.009 0.007 -0.102 -0.215 0.521 -0.207 -0.200 0.066 0.139 [Local]
+RHOSTRIP_1RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.MuTerm.AntiKt4EMTopoJets: -0.016 0.006 -0.066 -0.208 0.659 -0.185 -0.076 0.119 0.024 [Local]
+RHOSTRIP_2RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.MuTerm.AntiKt4EMTopoJets: -0.017 0.007 -0.077 -0.220 0.664 -0.204 -0.147 0.068 0.104 [Local]
+RHOSTRIP_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.MuTerm.AntiKt4EMTopoJets: -0.016 0.009 -0.083 -0.224 0.486 -0.085 -0.179 0.024 0.168 [Local]
+FINEVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.Description: VPF1_JETM8_test_20170306r7725_r7676_p2794 mu- and N_{PV}-dependent jet pileup corrections [Local]
+FINEVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.AbsEtaBins: 0.000 1.200 2.100 3.000 3.200 3.500 4.000 4.300 6.000 [Local]
+FINEVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.NPVTerm.AntiKt4EMTopoJets: 0.048 0.040 0.046 0.297 -0.131 -0.441 0.413 -0.118 -0.456 [Local]
+GLOBAL_RHOVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.Description: VPF1_JETM8_test_20170306r7725_r7676_p2794 mu- and N_{PV}-dependent jet pileup corrections [Local]
+GLOBAL_RHOVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.AbsEtaBins: 0.000 1.200 2.100 3.000 3.200 3.500 4.000 4.300 6.000 [Local]
+GLOBAL_RHOVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.NPVTerm.AntiKt4EMTopoJets: 0.056 0.039 0.047 0.298 -0.310 -0.333 0.436 -0.251 -0.405 [Local]
+RHOCIRCLE_1RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.Description: VPF1_JETM8_test_20170306r7725_r7676_p2794 mu- and N_{PV}-dependent jet pileup corrections [Local]
+RHOCIRCLE_1RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.AbsEtaBins: 0.000 1.200 2.100 3.000 3.200 3.500 4.000 4.300 6.000 [Local]
+RHOCIRCLE_1RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.NPVTerm.AntiKt4EMTopoJets: -0.087 0.062 -0.017 0.194 -0.116 -0.233 -0.042 -0.578 0.519 [Local]
+RHOCIRCLE_2RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.Description: VPF1_JETM8_test_20170306r7725_r7676_p2794 mu- and N_{PV}-dependent jet pileup corrections [Local]
+RHOCIRCLE_2RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.AbsEtaBins: 0.000 1.200 2.100 3.000 3.200 3.500 4.000 4.300 6.000 [Local]
+RHOCIRCLE_2RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.NPVTerm.AntiKt4EMTopoJets: 0.115 0.043 -0.076 0.299 0.007 -0.314 0.389 0.253 -0.565 [Local]
+RHODOUGHNUT_1_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.Description: VPF1_JETM8_test_20170306r7725_r7676_p2794 mu- and N_{PV}-dependent jet pileup corrections [Local]
+RHODOUGHNUT_1_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.AbsEtaBins: 0.000 1.200 2.100 3.000 3.200 3.500 4.000 4.300 6.000 [Local]
+RHODOUGHNUT_1_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.NPVTerm.AntiKt4EMTopoJets: 0.054 0.062 0.006 0.325 -0.360 -0.269 0.382 -0.187 -0.538 [Local]
+RHODOUGHNUT_1_4RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.Description: VPF1_JETM8_test_20170306r7725_r7676_p2794 mu- and N_{PV}-dependent jet pileup corrections [Local]
+RHODOUGHNUT_1_4RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.AbsEtaBins: 0.000 1.200 2.100 3.000 3.200 3.500 4.000 4.300 6.000 [Local]
+RHODOUGHNUT_1_4RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.NPVTerm.AntiKt4EMTopoJets: 0.061 0.052 0.027 0.317 -0.375 -0.323 0.402 -0.063 -0.617 [Local]
+RHODOUGHNUT_2_4RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.Description: VPF1_JETM8_test_20170306r7725_r7676_p2794 mu- and N_{PV}-dependent jet pileup corrections [Local]
+RHODOUGHNUT_2_4RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.AbsEtaBins: 0.000 1.200 2.100 3.000 3.200 3.500 4.000 4.300 6.000 [Local]
+RHODOUGHNUT_2_4RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.NPVTerm.AntiKt4EMTopoJets: 0.065 0.049 0.032 0.318 -0.384 -0.330 0.410 -0.046 -0.626 [Local]
+RHODOUGHNUT_2_5RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.Description: VPF1_JETM8_test_20170306r7725_r7676_p2794 mu- and N_{PV}-dependent jet pileup corrections [Local]
+RHODOUGHNUT_2_5RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.AbsEtaBins: 0.000 1.200 2.100 3.000 3.200 3.500 4.000 4.300 6.000 [Local]
+RHODOUGHNUT_2_5RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.NPVTerm.AntiKt4EMTopoJets: 0.067 0.045 0.041 0.297 -0.279 -0.365 0.460 -0.161 -0.538 [Local]
+RHOSTRIP_1RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.Description: VPF1_JETM8_test_20170306r7725_r7676_p2794 mu- and N_{PV}-dependent jet pileup corrections [Local]
+RHOSTRIP_1RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.AbsEtaBins: 0.000 1.200 2.100 3.000 3.200 3.500 4.000 4.300 6.000 [Local]
+RHOSTRIP_1RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.NPVTerm.AntiKt4EMTopoJets: 0.064 0.039 0.007 0.360 -0.322 -0.141 0.435 -0.172 -0.339 [Local]
+RHOSTRIP_2RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.Description: VPF1_JETM8_test_20170306r7725_r7676_p2794 mu- and N_{PV}-dependent jet pileup corrections [Local]
+RHOSTRIP_2RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.AbsEtaBins: 0.000 1.200 2.100 3.000 3.200 3.500 4.000 4.300 6.000 [Local]
+RHOSTRIP_2RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.NPVTerm.AntiKt4EMTopoJets: 0.065 0.044 0.019 0.323 -0.368 -0.245 0.504 -0.218 -0.321 [Local]
+RHOSTRIP_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.Description: VPF1_JETM8_test_20170306r7725_r7676_p2794 mu- and N_{PV}-dependent jet pileup corrections [Local]
+RHOSTRIP_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.AbsEtaBins: 0.000 1.200 2.100 3.000 3.200 3.500 4.000 4.300 6.000 [Local]
+RHOSTRIP_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets.NPVTerm.AntiKt4EMTopoJets: 0.064 0.045 0.022 0.328 -0.341 -0.381 0.525 -0.122 -0.459 [Local]
+residualE->print }
+
+    ================================================================================================
+    ====== 2 ===== Loop 2 [JetAlgos] :: AntiKt4EMTopoJets
+    ================================================================================================
+
+Collection name='TObjArray', class='TObjArray', size=55
+ *Br    0 :EventWeight : EventWeight/F                                        *
+*Entries :   185561 : Total  Size=     745781 bytes  File Size  =     681991 *
+*Baskets :       29 : Basket Size=      32000 bytes  Compression=   1.09     *
+*............................................................................*
+ *Br    1 :iso_corr1 : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354778 bytes  File Size  =    2340598 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.86     *
+*............................................................................*
+ *Br    2 :iso_true  : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354608 bytes  File Size  =    2309479 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.88     *
+*............................................................................*
+ *Br    3 :pv_cut    : pv_cut/F                                               *
+*Entries :   185561 : Total  Size=     745616 bytes  File Size  =     508078 *
+*Baskets :       29 : Basket Size=      32000 bytes  Compression=   1.47     *
+*............................................................................*
+ *Br    4 :pt_orig1  : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354608 bytes  File Size  =    2478736 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.76     *
+*............................................................................*
+ *Br    5 :E_orig1   : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354438 bytes  File Size  =    2502450 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.74     *
+*............................................................................*
+ *Br    6 :m_orig1   : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354438 bytes  File Size  =    2480872 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.75     *
+*............................................................................*
+ *Br    7 :eta_orig1 : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354778 bytes  File Size  =    2556515 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.70     *
+*............................................................................*
+ *Br    8 :phi_orig1 : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354778 bytes  File Size  =    2544523 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.71     *
+*............................................................................*
+ *Br    9 :pt_corr1  : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354608 bytes  File Size  =    2478523 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.76     *
+*............................................................................*
+ *Br   10 :E_corr1   : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354438 bytes  File Size  =    2502074 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.74     *
+*............................................................................*
+ *Br   11 :m_corr1   : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354438 bytes  File Size  =    2492972 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.75     *
+*............................................................................*
+ *Br   12 :eta_corr1 : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354778 bytes  File Size  =    2556351 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.70     *
+*............................................................................*
+ *Br   13 :phi_corr1 : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354778 bytes  File Size  =    2544591 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.71     *
+*............................................................................*
+ *Br   14 :pt_corr2  : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354608 bytes  File Size  =    2478523 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.76     *
+*............................................................................*
+ *Br   15 :E_corr2   : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354438 bytes  File Size  =    2502074 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.74     *
+*............................................................................*
+ *Br   16 :m_corr2   : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354438 bytes  File Size  =    2492972 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.75     *
+*............................................................................*
+ *Br   17 :eta_corr2 : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354778 bytes  File Size  =    2556351 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.70     *
+*............................................................................*
+ *Br   18 :phi_corr2 : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354778 bytes  File Size  =    2544591 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.71     *
+*............................................................................*
+ *Br   19 :pt_calo   : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354438 bytes  File Size  =    2480169 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.75     *
+*............................................................................*
+ *Br   20 :E_calo    : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354268 bytes  File Size  =    2500278 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.74     *
+*............................................................................*
+ *Br   21 :m_calo    : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354268 bytes  File Size  =    2491217 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.75     *
+*............................................................................*
+ *Br   22 :eta_calo  : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354608 bytes  File Size  =    2554235 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.70     *
+*............................................................................*
+ *Br   23 :phi_calo  : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354608 bytes  File Size  =    2542483 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.71     *
+*............................................................................*
+ *Br   24 :tower_rho : vector<float>                                          *
+*Entries :   185561 : Total  Size=    2610921 bytes  File Size  =     291620 *
+*Baskets :      109 : Basket Size=      32000 bytes  Compression=   8.94     *
+*............................................................................*
+ *Br   25 :tgrid_rho : vector<float>                                          *
+*Entries :   185561 : Total  Size=    2610921 bytes  File Size  =     291620 *
+*Baskets :      109 : Basket Size=      32000 bytes  Compression=   8.94     *
+*............................................................................*
+ *Br   26 :pt_true   : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354438 bytes  File Size  =    2482142 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.75     *
+*............................................................................*
+ *Br   27 :E_true    : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354268 bytes  File Size  =    2498586 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.74     *
+*............................................................................*
+ *Br   28 :m_true    : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354268 bytes  File Size  =    2479585 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.75     *
+*............................................................................*
+ *Br   29 :eta_true  : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354608 bytes  File Size  =    2554399 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.70     *
+*............................................................................*
+ *Br   30 :phi_true  : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4354608 bytes  File Size  =    2542863 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.71     *
+*............................................................................*
+ *Br   31 :area      : vector<float>                                          *
+*Entries :   185561 : Total  Size=    4353928 bytes  File Size  =    2353581 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   1.85     *
+*............................................................................*
+ *Br   32 :index     : vector<int>                                            *
+*Entries :   185561 : Total  Size=    4354098 bytes  File Size  =    1191625 *
+*Baskets :      166 : Basket Size=      32000 bytes  Compression=   3.65     *
+*............................................................................*
+ *Br   33 :mu        : mu/F                                                   *
+*Entries :   185561 : Total  Size=     745484 bytes  File Size  =      40569 *
+*Baskets :       29 : Basket Size=      32000 bytes  Compression=  18.35     *
+*............................................................................*
+ *Br   34 :NPV       : NPV/F                                                  *
+*Entries :   185561 : Total  Size=     745517 bytes  File Size  =     205319 *
+*Baskets :       29 : Basket Size=      32000 bytes  Compression=   3.63     *
+*............................................................................*
+ *Br   35 :RHO       : RHO/F                                                  *
+*Entries :   185561 : Total  Size=     745517 bytes  File Size  =     661884 *
+*Baskets :       29 : Basket Size=      32000 bytes  Compression=   1.13     *
+*............................................................................*
+ *Br   36 :RHOTGRID  : RHOTGRID/F                                             *
+*Entries :   185561 : Total  Size=     745682 bytes  File Size  =       7212 *
+*Baskets :       29 : Basket Size=      32000 bytes  Compression= 103.27     *
+*............................................................................*
+ *Br   37 :RHOGRID   : RHOGRID/F                                              *
+*Entries :   185561 : Total  Size=     745649 bytes  File Size  =     339526 *
+*Baskets :       29 : Basket Size=      32000 bytes  Compression=   2.19     *
+*............................................................................*
+ *Br   38 :GLOBAL_RHO : GLOBAL_RHO/F                                          *
+*Entries :   185561 : Total  Size=     745748 bytes  File Size  =     660012 *
+*Baskets :       29 : Basket Size=      32000 bytes  Compression=   1.13     *
+*............................................................................*
+ *Br   39 :RHOSTRIP_1R : vector<float>                                        *
+*Entries :   185561 : Total  Size=    8908133 bytes  File Size  =    6376983 *
+*Baskets :      307 : Basket Size=      32000 bytes  Compression=   1.40     *
+*............................................................................*
+ *Br   40 :RHOSTRIP_2R : vector<float>                                        *
+*Entries :   185561 : Total  Size=    8908133 bytes  File Size  =    6306030 *
+*Baskets :      307 : Basket Size=      32000 bytes  Compression=   1.41     *
+*............................................................................*
+ *Br   41 :RHOSTRIP_3R : vector<float>                                        *
+*Entries :   185561 : Total  Size=    8908133 bytes  File Size  =    6261680 *
+*Baskets :      307 : Basket Size=      32000 bytes  Compression=   1.42     *
+*............................................................................*
+ *Br   42 :RHOCIRCLE_1R : vector<float>                                       *
+*Entries :   185561 : Total  Size=    8908444 bytes  File Size  =    6763744 *
+*Baskets :      307 : Basket Size=      32000 bytes  Compression=   1.32     *
+*............................................................................*
+ *Br   43 :RHOCIRCLE_2R : vector<float>                                       *
+*Entries :   185561 : Total  Size=    8908444 bytes  File Size  =    6679466 *
+*Baskets :      307 : Basket Size=      32000 bytes  Compression=   1.33     *
+*............................................................................*
+ *Br   44 :RHOCIRCLE_3R : vector<float>                                       *
+*Entries :   185561 : Total  Size=    8908444 bytes  File Size  =    6594541 *
+*Baskets :      307 : Basket Size=      32000 bytes  Compression=   1.35     *
+*............................................................................*
+ *Br   45 :RHODOUGHNUT_1_3R : vector<float>                                   *
+*Entries :   185561 : Total  Size=    8909688 bytes  File Size  =    6620076 *
+*Baskets :      307 : Basket Size=      32000 bytes  Compression=   1.34     *
+*............................................................................*
+ *Br   46 :RHODOUGHNUT_1_4R : vector<float>                                   *
+*Entries :   185561 : Total  Size=    8909688 bytes  File Size  =    6581699 *
+*Baskets :      307 : Basket Size=      32000 bytes  Compression=   1.35     *
+*............................................................................*
+ *Br   47 :RHODOUGHNUT_2_4R : vector<float>                                   *
+*Entries :   185561 : Total  Size=    8909688 bytes  File Size  =    6625151 *
+*Baskets :      307 : Basket Size=      32000 bytes  Compression=   1.34     *
+*............................................................................*
+ *Br   48 :RHODOUGHNUT_2_5R : vector<float>                                   *
+*Entries :   185561 : Total  Size=    8909688 bytes  File Size  =    6573342 *
+*Baskets :      307 : Basket Size=      32000 bytes  Compression=   1.35     *
+*............................................................................*
+ *Br   49 :reco_jets_pt : vector<float>                                       *
+*Entries :   185561 : Total  Size=    8908444 bytes  File Size  =    6849043 *
+*Baskets :      307 : Basket Size=      32000 bytes  Compression=   1.30     *
+*............................................................................*
+ *Br   50 :S         : S/I                                                    *
+*Entries :   229445 : Total  Size=     921290 bytes  File Size  =       8108 *
+*Baskets :       32 : Basket Size=      32000 bytes  Compression= 113.51     *
+*............................................................................*
+ *Br   51 :NS        : NS/F                                                   *
+*Entries :   185561 : Total  Size=     745280 bytes  File Size  =       6878 *
+*Baskets :       27 : Basket Size=      32000 bytes  Compression= 108.24     *
+*............................................................................*
+ *Br   52 :X         : X/F                                                    *
+*Entries :   185561 : Total  Size=     745249 bytes  File Size  =       6854 *
+*Baskets :       27 : Basket Size=      32000 bytes  Compression= 108.61     *
+*............................................................................*
+ *Br   53 :E         : E/F                                                    *
+*Entries :   185561 : Total  Size=     745249 bytes  File Size  =       6859 *
+*Baskets :       27 : Basket Size=      32000 bytes  Compression= 108.53     *
+*............................................................................*
+ *Br   54 :EW        : EW/F                                                   *
+*Entries :   185561 : Total  Size=     745280 bytes  File Size  =     680194 *
+*Baskets :       27 : Basket Size=      32000 bytes  Compression=   1.09     *
+*............................................................................*
+
+        ============================================================================================
+        ===== 3 ===== Loop 2.1 [Global rhos] :: RHO
+        ============================================================================================
+
+        ResidualOffsetName: FINEVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets
+        Rho:                3.76063e-27
+        Printing contents of vectors: 
+          ConstTermAbsEtaBins
+0
+0.9
+1.2
+1.5
+1.8
+2.4
+2.8
+3.2
+3.5
+4
+4.3
+6
+          NPVTerm:
+0.048
+0.04
+0.046
+0.297
+-0.131
+-0.441
+0.413
+-0.118
+-0.456
+          MuTerm:
+-0.01
+0.006
+-0.109
+-0.23
+0.474
+-0.186
+-0.203
+-0.124
+0.229
+          ConstTerm:
+-8.021
+-1.71
+-7.659
+-2.172
+4.466
+1.574
+1.17
+-1.061
+-4.529
+4.629
+1.416
+-5.974
+
+        ============================================================================================
+        ===== 3 ===== Loop 2.1 [Global rhos] :: GLOBAL_RHO
+        ============================================================================================
+
+        ResidualOffsetName: GLOBAL_RHOVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets
+        Rho:                4.59163e-41
+        Printing contents of vectors: 
+          ConstTermAbsEtaBins
+0
+0.9
+1.2
+1.5
+1.8
+2.4
+2.8
+3.2
+3.5
+4
+4.3
+6
+          NPVTerm:
+0.056
+0.039
+0.047
+0.298
+-0.31
+-0.333
+0.436
+-0.251
+-0.405
+          MuTerm:
+-0.025
+0.003
+-0.104
+-0.239
+0.638
+-0.267
+-0.207
+-0.023
+0.196
+          ConstTerm:
+-8.361
+-1.739
+-7.662
+-2.204
+4.511
+1.514
+1.214
+-1.011
+-4.563
+4.609
+1.451
+-7.069
+
+        ============================================================================================
+        ===== 3 ===== Loop 2.2 [Local rhos] :: RHOSTRIP_1R
+        ============================================================================================
+
+        ResidualOffsetName: RHOSTRIP_1RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets
+        Rho:                0x4041af0
+        Printing contents of vectors: 
+          jetNPVTerm:
+0.064
+0.039
+0.007
+0.36
+-0.322
+-0.141
+0.435
+-0.172
+-0.339
+          jetMuTerm:
+-0.016
+0.006
+-0.066
+-0.208
+0.659
+-0.185
+-0.076
+0.119
+0.024
+          jetConstTerm:
+-10.132
+-0.967
+-6.397
+-1.329
+6.575
+2.124
+0.289
+0.684
+-6.423
+10.291
+3.614
+-9.953
+
+        ============================================================================================
+        ===== 3 ===== Loop 2.2 [Local rhos] :: RHOSTRIP_2R
+        ============================================================================================
+
+        ResidualOffsetName: RHOSTRIP_2RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets
+        Rho:                0x5e09ff0
+        Printing contents of vectors: 
+          jetNPVTerm:
+0.065
+0.044
+0.019
+0.323
+-0.368
+-0.245
+0.504
+-0.218
+-0.321
+          jetMuTerm:
+-0.017
+0.007
+-0.077
+-0.22
+0.664
+-0.204
+-0.147
+0.068
+0.104
+          jetConstTerm:
+-9.385
+-1.097
+-6.583
+-1.224
+5.872
+1.671
+2.093
+-1.914
+-5.78
+5.774
+0.275
+-10.311
+
+        ============================================================================================
+        ===== 3 ===== Loop 2.2 [Local rhos] :: RHOSTRIP_3R
+        ============================================================================================
+
+        ResidualOffsetName: RHOSTRIP_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets
+        Rho:                0x5e21cc0
+        Printing contents of vectors: 
+          jetNPVTerm:
+0.064
+0.045
+0.022
+0.328
+-0.341
+-0.381
+0.525
+-0.122
+-0.459
+          jetMuTerm:
+-0.016
+0.009
+-0.083
+-0.224
+0.486
+-0.085
+-0.179
+0.024
+0.168
+          jetConstTerm:
+-8.915
+-1.315
+-6.668
+-1.48
+5.126
+1.905
+1.775
+-1.47
+-4.961
+4.743
+2.584
+-10.816
+
+        ============================================================================================
+        ===== 3 ===== Loop 2.2 [Local rhos] :: RHOCIRCLE_1R
+        ============================================================================================
+
+        ResidualOffsetName: RHOCIRCLE_1RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets
+        Rho:                0x5c83310
+        Printing contents of vectors: 
+          jetNPVTerm:
+-0.087
+0.062
+-0.017
+0.194
+-0.116
+-0.233
+-0.042
+-0.578
+0.519
+          jetMuTerm:
+-0.019
+0
+-0.051
+-0.104
+0.11
+0.067
+0.131
+0.173
+-0.589
+          jetConstTerm:
+-4.329
+-3.221
+-9.918
+1.035
+1.822
+0.964
+17.21
+-23.449
+18.27
+11.071
+-0.174
+-8.649
+
+        ============================================================================================
+        ===== 3 ===== Loop 2.2 [Local rhos] :: RHOCIRCLE_2R
+        ============================================================================================
+
+        ResidualOffsetName: RHOCIRCLE_2RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets
+        Rho:                0x5c9af60
+        Printing contents of vectors: 
+          jetNPVTerm:
+0.115
+0.043
+-0.076
+0.299
+0.007
+-0.314
+0.389
+0.253
+-0.565
+          jetMuTerm:
+0.052
+-0.037
+-0.063
+-0.142
+-0.072
+0.33
+-0.148
+-0.185
+-0.028
+          jetConstTerm:
+-14.802
+-1.293
+-3.309
+-2.729
+10.785
+1.621
+7.375
+-3.066
+-0.768
+16.272
+-13.1
+0.989
+
+        ============================================================================================
+        ===== 3 ===== Loop 2.2 [Local rhos] :: RHOCIRCLE_3R
+        ============================================================================================
+
+        ResidualOffsetName: RHOCIRCLE_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets
+        Rho:                0x5bce980
+        Printing contents of vectors: 
+          jetNPVTerm:
+0
+0
+0
+0
+0
+          jetMuTerm:
+-0.007
+0.005
+-0.087
+-0.19
+0.293
+0.041
+-0.107
+-0.102
+0.22
+          jetConstTerm:
+-10.456
+-1.226
+-7.003
+-1.503
+5.692
+1.519
+1.056
+-1.057
+-1.807
+13.694
+-10.322
+-3.444
+
+        ============================================================================================
+        ===== 3 ===== Loop 2.2 [Local rhos] :: RHODOUGHNUT_1_3R
+        ============================================================================================
+
+        ResidualOffsetName: RHODOUGHNUT_1_3RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets
+        Rho:                0x659d760
+        Printing contents of vectors: 
+          jetNPVTerm:
+0.054
+0.062
+0.006
+0.325
+-0.36
+-0.269
+0.382
+-0.187
+-0.538
+          jetMuTerm:
+-0.006
+0.006
+-0.093
+-0.193
+0.428
+-0.199
+-0.216
+-0.099
+0.335
+          jetConstTerm:
+-9.932
+-1.058
+-7.797
+-1.078
+5.488
+1.903
+1.237
+-1.492
+-4.466
+6.187
+3.111
+-7.283
+
+        ============================================================================================
+        ===== 3 ===== Loop 2.2 [Local rhos] :: RHODOUGHNUT_1_4R
+        ============================================================================================
+
+        ResidualOffsetName: RHODOUGHNUT_1_4RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets
+        Rho:                0x65b52b0
+        Printing contents of vectors: 
+          jetNPVTerm:
+0.061
+0.052
+0.027
+0.317
+-0.375
+-0.323
+0.402
+-0.063
+-0.617
+          jetMuTerm:
+-0.014
+0.007
+-0.088
+-0.225
+0.63
+-0.269
+-0.144
+-0.045
+0.284
+          jetConstTerm:
+-8.925
+-1.342
+-6.917
+-1.759
+4.942
+1.71
+1.711
+-1.034
+-4.041
+5.232
+-0.278
+-6.398
+
+        ============================================================================================
+        ===== 3 ===== Loop 2.2 [Local rhos] :: RHODOUGHNUT_2_4R
+        ============================================================================================
+
+        ResidualOffsetName: RHODOUGHNUT_2_4RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets
+        Rho:                0x63a3330
+        Printing contents of vectors: 
+          jetNPVTerm:
+0.065
+0.049
+0.032
+0.318
+-0.384
+-0.33
+0.41
+-0.046
+-0.626
+          jetMuTerm:
+-0.013
+0.006
+-0.091
+-0.222
+0.699
+-0.296
+-0.205
+0.013
+0.247
+          jetConstTerm:
+-8.643
+-1.375
+-6.946
+-2.06
+4.746
+1.864
+1.386
+-1.114
+-3.528
+4.85
+0.767
+-6.271
+
+        ============================================================================================
+        ===== 3 ===== Loop 2.2 [Local rhos] :: RHODOUGHNUT_2_5R
+        ============================================================================================
+
+        ResidualOffsetName: RHODOUGHNUT_2_5RVPF1_JETM8_test_20170306r7725_r7676_p2794AntiKt4EMTopoJets
+        Rho:                0x63bb200
+        Printing contents of vectors: 
+          jetNPVTerm:
+0.067
+0.045
+0.041
+0.297
+-0.279
+-0.365
+0.46
+-0.161
+-0.538
+          jetMuTerm:
+-0.009
+0.007
+-0.102
+-0.215
+0.521
+-0.207
+-0.2
+0.066
+0.139
+          jetConstTerm:
+-8.272
+-1.537
+-7.497
+-1.716
+4.397
+1.677
+1.858
+-1.185
+-3.356
+5.021
+0.757
+-4.948
+
+    ================================================================================================
+    ===== 2 ===== Loop 3 [Event loop]
+    ================================================================================================
+
+73.18user 1.10system 1:54.24elapsed 65%CPU (0avgtext+0avgdata 206608maxresident)k
+332328inputs+1747144outputs (1657major+69352minor)pagefaults 0swaps

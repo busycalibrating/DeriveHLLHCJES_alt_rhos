@@ -1,0 +1,43 @@
+#include "CalibrationTools.h"
+
+//takes an rtag rtcc and a version ver
+void tidyDownload(const char* rtcc = "", const char* ver=""){
+  TString rt(rtcc);
+  TEnv* downloadE = new TEnv("Download.config"); //directing the download and weighting
+  downloadE->Print();
+  TString User = downloadE->GetValue("User","alkire");
+  std::cout<<"User: "<<User<<std::endl;
+  TString LocalConfig = downloadE->GetValue("LocalConfig","Local.config");
+  TEnv* localE = new TEnv(LocalConfig);
+  TString InputFolder = localE->GetValue("OutputFolder","");
+  TString verS(ver);
+  TString Version = downloadE->GetValue("Version","VERSION");
+  if(verS!=""){ Version = verS; InputFolder = "/tmp/"+User+"/"+Version;}
+  if(InputFolder==""){InputFolder = "/tmp/"+User+"/"+Version;}
+  std::cout<<"Version: "<<Version<<std::endl;
+  std::cout<<"InputFolder: "<<InputFolder<<std::endl;
+  
+  std::vector<TString> Rtags;
+  if (rt == "") Rtags = Vectorize(downloadE->GetValue("Rtags",""));
+  else Rtags.push_back(rt);
+  //std::cout<<"InputFolder: "<<InputFolder<<std::endl;
+  
+  system((const char*) ("mkdir "+InputFolder+"/temp"));
+  for (int i = 0 ; i < Rtags.size(); ++i){
+    system((const char*)("rm -fr "+InputFolder+"/temp/*"));
+    std::cout<<"Copying files to temporary folder for rtag "+Rtags.at(i)<<std::endl;
+    std::cout<<"cp -r "+InputFolder+"/user."+User+"*."+Version+"*"+Rtags.at(i)+"*hist*/ "+InputFolder+"/temp/"<<std::endl;
+    system((const char*)("cp -r "+InputFolder+"/user."+User+"*."+Version+"*"+Rtags.at(i)+"*hist*/ "+InputFolder+"/temp/"));
+    std::cout<<"Adding weight variables"<<std::endl;
+    std::cout<<"weight "+InputFolder+"/temp/*/*"<<std::endl;
+    system((const char*)("weight "+LocalConfig+" "+InputFolder+"/temp/*/*"));
+    std::cout<<"combining to output file: "<< InputFolder+"/"+Rtags.at(i)+".root" <<std::endl;
+    std::cout<<"hadd "+InputFolder+"/"+Rtags.at(i)+".root "+InputFolder+"/temp/*/* &> "+InputFolder+"/temp/shittyhaddoutput.txt"<<std::endl;
+    system((const char*)("rm "+InputFolder+"/"+Rtags.at(i)+".root"));
+    system((const char*)("hadd "+InputFolder+"/"+Rtags.at(i)+".root "+InputFolder+"/temp/*/* &> "+InputFolder+"/temp/shittyhaddoutput.txt")); 
+    //std::cout<<"Deleting temporary files"<<std::endl;
+    //std::cout<<"rm -fr "+InputFolder+"/temp/*"<<std::endl;
+    //system((const char*)("rm -fr "+InputFolder+"/temp/*"));
+  }
+  std::cout<<"All done with file weighting and combination."<<std::endl;
+}
